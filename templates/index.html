@@ -44,14 +44,15 @@
             window.location.href = '/'
         }
 
-        // $(document).ready(function () {
-        //     // 단일게시글 팝업창 닫아놓기
-        //     close_popup()
-        //     // 포스팅 팝업창 닫아놓기
-        //     close_posting_popup();
-        //     get_id()
-        //     ifLoggedIn()
-        // });
+         $(document).ready(function () {
+             // 단일게시글 팝업창 닫아놓기
+             close_popup()
+             // 포스팅 팝업창 닫아놓기
+             close_posting_popup();
+             get_id()
+             ifLoggedIn()
+         }
+        );
 
         function get_id() {
             $.ajax({
@@ -60,7 +61,7 @@
                 data: {},
                 success: function (response) {
                         return response['user_id']
-                    
+
                 }
             })
         }
@@ -111,7 +112,9 @@
             })
 
 
-        } function comment() {
+        }
+
+        function comment() {
             console.log("여기까지는 나오는가")
             let comment = document.getElementById('comment').value; 4
             console.log(comment)
@@ -119,7 +122,7 @@
             let today = new Date().toISOString();
             //get_id로 유저의 id를 받아옴 
             let name = get_id();
-            
+
             console.log(comment);
             console.log(today);
             alert(today, comment);
@@ -260,8 +263,21 @@
         }
 
         function show_posting_popup() {
-            $('.modal-window').show();
-            $('.modal-overlay').show();
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    if (response['result'] !== 'success') {
+                        alert("포스팅을 하시려면 로그인을 해주세요"); // todo 여기 지우셨던 이유 질문
+                        ifLoggedIn()
+                    } else {
+                        $('.modal-window').show();
+                        $('.modal-overlay').show();
+                    }
+
+                }
+            })
         }
 
         //후기를 작성하면 서버로 내용을 보내서 저장하는 함수
@@ -269,6 +285,7 @@
             console.log("여기까지는 나오는가")
             let comment = document.getElementById('comment').value;
             let userID = document.getElementById('userID').value;
+            // todo  userID를 입력해서 받아오는 것인지 질문(정현)
             let today = new Date().toISOString();
             // 이름을 어떻게 가져올것인가?
             // let name =
@@ -300,25 +317,29 @@
     <!--    한솔님 주신 javascript 코드 -->
     <script>
 
-
-        // const closeBtn = modal.querySelector(".close-area")
-        // closeBtn.addEventListener("click", e => {
-        //     modal.style.display = "none"
-        // })
-
         function previewArticle() {
-            // alert("프리뷰클릭")
             let url = $('#url').val()
-
-            console.log(url)
-
             $.ajax({
                 type: "POST",
                 url: "/api/post/preview",
                 data: { 'url_give': url },
                 success: function (response) {
-                    alert(response["msg"]);
-                    window.location.reload()
+                    $('#musics').empty()
+
+                    let title = response['title']
+                    let img = response['img']
+                    let singer = response['singer']
+
+                    let temp =
+                        `<div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="${img}" alt="Card image cap">
+                            <div class="card-body">
+                                <p class="title">${title}</p>
+                                <p class="singer">${singer}</p>
+                            </div>
+                           </div>`
+                    $('#musics').append(temp)
+                    // window.location.reload() //todo 지워졌던 부분 확인
                 }
             })
 
@@ -326,13 +347,13 @@
         }
 
         function postArticle() {
-            let url = $('url').val()
-            let desc = $('description').val()
+            let url = $('#url').val()
+            let desc = $('#description').val()
 
             $.ajax({
                 type: "POST",
-                url: "/api/post",
-                data: { url_give: url, desc_give: desc },
+                url: "/api/post/post_article",
+                data: {url_give: url, desc_give: desc},
                 success: function (response) {
                     alert(response["msg"]);
                     window.location.reload()
@@ -512,23 +533,35 @@
             </div>
         </div>
 
-        <!--   팝업(2) 글작성 / 한솔님-->
-        <div id="modal" class="modal-overlay">
-            <div class="modal-window">
-                <div class="title">
-                    <h2>게시글 작성</h2>
-                </div>
-                <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
+    <!--   팝업(2) 글작성 / 한솔님-->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
+
+            <div class="custom-shape-divider-bottom-1641970456">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                     preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                          class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <div class="title">
+                <h2></h2>
+            </div>
+            <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
 
                 <div class="content">
 
-                    <div class="form-group">
-                        <label for="url"></label>
-                        <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
-                    </div>
-                    <div>
-                        <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
-                    </div>
+                <div class="form-group">
+                    <label for="url"></label>
+                    <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
+                </div>
+                <div>
+                    <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
+                </div>
+
+                <div class="card-columns" id="musics">
+                </div>
 
 
                     <div class="form-group">
