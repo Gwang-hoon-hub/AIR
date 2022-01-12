@@ -346,9 +346,14 @@ def single():
     comments = list(db.comments.find({'article_id':article_id}))
     article = list( db.articles.find( {'_id':article_id}))[0]
 
+    if len(comments) != 0:
+        comments_res = comments
+    else:
+        comments_res = [{'user_id':"인에어팟", 'contents':"아직 댓글이 없어요~ 첫 댓글을 달아주세요~"}]
+
     # return jsonify({'all_comments': comments})
    # return render_template("index.html", comment_give=comments, articles_give=article)
-    return jsonify({'comments':comments , 'article': article })
+    return jsonify({'comments':comments_res , 'article': article })
 
 # 카드 클릭 시 단일 게시물 보여주기
 

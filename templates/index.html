@@ -357,6 +357,9 @@
                     comments = response['comments']
                     article = response['article']
                     console.log(comments, article)
+
+                     $('.window').empty()
+
                     temp_html = `
                 <button type="button" class="close" onclick="close_popup()" aria-label="Close" id="close">
                     <span aria-hidden="true">&times;</span>
@@ -416,7 +419,7 @@
 
                                         <div >
                                             <input type="text" id="input-data" style="display: none" value="" size="40">
-                                            <p id="putData" style="display: block">${comments[0]['contents']}: i는
+                                            <p id="putData" style="display: block">${comments[0]['contents']}
                                                 </p>
                                             </input>
                                         </div>
@@ -433,6 +436,8 @@
                                                 class="badge badge-danger" style="vertical-align: text-after-edge"
                                                 id="delete">삭제</span></a>
                                     </div>
+
+
                                 </li>
                             </div>
 
