@@ -270,116 +270,83 @@ a {
 /* 한솔님 주신 css*/
 
 * {
-    font-family: 'Noto Sans KR', sans-serif;
-}
+            font-family: 'Noto Sans KR', sans-serif;
+        }
 
-#modal.modal-overlay {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
-    background: rgba(253, 253, 253, 0.14);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(1.5px);
-    -webkit-backdrop-filter: blur(1.5px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
+            background: rgba(153, 51, 204, 0.14);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
 
-#modal .modal-window {
+        #modal .modal-window {
 
-    background: rgb(90, 47, 244);
-    background: linear-gradient(114deg, rgba(90, 47, 244, 1) 45%, rgba(0, 107, 255, 1) 77%, rgba(0, 171, 205, 1) 96%);
+            background: rgba(255, 255, 255, 2);
+            box-shadow: 0 8px 32px 0 rgba(51, 51, 51, 0.5);
+            backdrop-filter: blur(13.5px);
+            -webkit-backdrop-filter: blur(13.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
 
-    /*background: rgba(255, 255, 255, 2);*/
-    box-shadow: 0 8px 32px 0 rgba(51, 51, 51, 0.5);
-    backdrop-filter: blur(13.5px);
-    -webkit-backdrop-filter: blur(13.5px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 700px;
+            height: 900px;
+            position: relative;
+            padding: 10px;
+        }
 
-    width: 700px;
-    height: 900px;
-    position: relative;
-    padding: 10px;
-}
+        #modal .title {
+            padding-left: 10px;
+            letter-spacing: 2px;
+            word-spacing: 4px;
+            display: inline;
+            color: black;
 
-#modal .title {
-    padding-left: 10px;
-    letter-spacing: 2px;
-    word-spacing: 4px;
-    display: inline;
-    color: black;
+        }
 
-}
+        #modal .title h2 {
+            display: inline;
+        }
 
-#modal .title h2 {
-    display: inline;
-}
+        #modal .close-area {
+            display: inline;
+            float: right;
+            padding-right: 10px;
+            cursor: pointer;
+            color: black;
+        }
 
-#modal .close-area {
-    display: inline;
-    float: right;
-    padding-right: 10px;
-    cursor: pointer;
-    color: black;
-}
+        #modal .content {
+            margin-top: 20px;
+            padding: 0px 10px;
+            color: black;
+        }
 
-#modal .content {
-    margin-top: 20px;
-    padding: 0px 10px;
-    color: black;
-}
+        .btn-primary {
+            color: black;
+            margin: auto;
+            display: flex;
+        }
 
-.btn-primary {
-    color: #FAEAFF;
-    background: #719BF0;
-    margin: auto;
-    display: flex;
-    border: #FAEAFF;
-}
-
-.preview_btn {
-    color: #FAEAFF;
-    background: #719BF0;
-    position: absolute;
-    margin-left: 84%;
-    border: #719BF0;
-    font-size: 10px;
-    padding: 3px;
-    top: 100px;
+        .preview_btn {
+            position: absolute;
+            margin-left: 84%;
+            background-color: transparent;
+            border: solid 1px;
+            font-size: 10px;
+            padding: 3px;
 
 
-}
-
-.card-columns{
-    position: relative;
-    left: 150px;
-}
-
-.custom-shape-divider-bottom-1641970456 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    transform: rotate(180deg);
-}
-
-.custom-shape-divider-bottom-1641970456 svg {
-    position: relative;
-    display: block;
-    width: calc(156% + 1.3px);
-    height: 191px;
-}
-
-.custom-shape-divider-bottom-1641970456 .shape-fill {
-    fill: #FFFFFF;
-}
+        }

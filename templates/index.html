@@ -12,13 +12,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
-          rel="stylesheet">
+        rel="stylesheet">
+
 
 
     <!-- App CSS -->
@@ -27,17 +28,19 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+
 
 
     <!--   JS 정현 -->
     <script type="text/javascript">
 
         function logout() {
-            $.removeCookie("access_token", {path: '/'})
+            $.removeCookie("access_token", { path: '/' })
             window.location.href = '/'
         }
 
@@ -57,7 +60,7 @@
                 url: "/api/get_id",
                 data: {},
                 success: function (response) {
-                    return response['user_id']
+                        return response['user_id']
 
                 }
             })
@@ -113,8 +116,7 @@
 
         function comment() {
             console.log("여기까지는 나오는가")
-            let comment = document.getElementById('comment').value;
-            4
+            let comment = document.getElementById('comment').value; 4
             console.log(comment)
             let userID = document.getElementById('userID').value;
             let today = new Date().toISOString();
@@ -371,11 +373,11 @@
     <header id="header">
         <div class="header">
 
-        <div class="header_menu">
-            <a href="/mypage" id="myPgBtn" class="myPgBtn">My Page</a>
-            <a href="/login" id="loginBtn" class="loginBtn">Login</a>
-            {# todo logout 구현 #}
-            <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
+            <div class="header_menu">
+                <a href="/mypage" id="myPgBtn" class="myPgBtn">My Page</a>
+                <a href="/login" id="loginBtn" class="loginBtn">Login</a>
+                {# todo logout 구현 #}
+                <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
 
             </div>
 
@@ -534,7 +536,7 @@
     <!--   팝업(2) 글작성 / 한솔님-->
     <div id="modal" class="modal-overlay">
         <div class="modal-window">
-            <
+
             <div class="custom-shape-divider-bottom-1641970456">
                 <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
                      preserveAspectRatio="none">
@@ -575,7 +577,7 @@
 
     </div>
 
-<a id="post-button" href="#" onclick="show_posting_popup()">post</a>
+    <a id="post-button" href="#" onclick="show_posting_popup()">post</a>
 </body>
 <script src="../static/main.js"></script>
 
