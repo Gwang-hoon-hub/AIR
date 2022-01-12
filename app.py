@@ -32,7 +32,7 @@ db = client.mini
 
 app.register_blueprint(home_route.bp)
 app.register_blueprint(single_route.bp)
-app.register_blueprint(post_route.bp)
+# app.register_blueprint(post_route.bp)
 
 # 이 조건을 달지 않으면, css같은 사항 변화를 12시간마다 체크한다. 즉 디버깅모드에서는 불편하므로, 디버깅시에는 1초로 변경하는 것.
 if app.config['DEBUG']:
