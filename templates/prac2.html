@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css"/>
+
+    <script src="{{ url_for('static',filename='main.js') }}"></script>
+    <title>단일 아티클 -- 광훈! -- 못해서 죄송합니다...</title>
+    <style>
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+        }
+
+        .window {
+            background: rgba(255, 255, 255, 2);
+            box-shadow: 0 8px 32px 0 rgba(51, 51, 51, 0.5);
+            backdrop-filter: blur(13.5px);
+            -webkit-backdrop-filter: blur(13.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+            width: 700px;
+            height: 900px;
+            position: relative;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .album-img {
+            margin: 20px 20px 20px 20px;
+        }
+
+        .mr-3 {
+            max-width: 50%;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        .media-body {
+            max-width: 50%;
+            height: auto;
+        }
+
+        .media {
+            padding: 20px 10px 20px 10px;
+        }
+
+        .card {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <button type="button" class="btn btn-primary" id="show">show버튼</button>
+</div>
+<div id="background" class="background">
+    <div class="window">
+        <!--            <div class="wrap">-->
+        <button type="button" class="close" aria-label="Close" id="close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="album-wrap" style="padding-bottom: 10px">
+            <div class="album-img">
+                <div class="media">
+                    <img class="mr-3" src="/static/post.png" alt="Generic placeholder image">
+                    <div class="media-body">
+                        <h5 class="mt-0" style="padding-top: 10px">앨범 제목</h5>
+                        <h6 class="mt-0">가수</h6>
+                        노래 제목
+                    </div>
+                </div>
+            </div>
+            <div class="card" id="user-comment-div">
+                <div class="card-body">
+                    This is some text within a card body. 코멘트 들어간다!!
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body1">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="댓글 입력!"
+                           aria-label="Recipient's username" aria-describedby="button-addon2" id="comment">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="comment()">
+                            입력
+                        </button>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    <div id="box">
+                        <!--여기에 들어감-->
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <!--            </div>-->
+    </div>
+</div>
+</body>
+<script src="../static/main.js"></script>
+</html>
