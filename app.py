@@ -124,7 +124,7 @@ def login():
         else:
             payload = {
                 'user_id': id,
-                'exp': datetime.utcnow() + timedelta(seconds=60)  # 1분
+                'exp': datetime.utcnow() + timedelta(seconds=6000)  # 1분
             }
             access_token = jwt.encode(payload, SECRET_KEY)  # Default: "HS256"
 
@@ -253,10 +253,11 @@ def preview():
     temp_title = ''
     temp_singer = ''
 
+
     for i in driver.find_elements_by_css_selector(
             '#content > div.summary_section > div.summary > div.text_area > h2 > span.title'):
         title = (i.text)
-        temp_title = title
+        temp_title = title[3:]
 
     for i in driver.find_elements_by_css_selector(
             '#content > div.summary_section > div.summary > div.text_area > h2 > span.sub_title > span:nth-child(2) > span > a > span'):
@@ -287,7 +288,7 @@ def post_article():
     for i in driver.find_elements_by_css_selector(
             '#content > div.summary_section > div.summary > div.text_area > h2 > span.title'):
         title = (i.text)
-        temp_title = title
+        temp_title = title[3:]
 
     for i in driver.find_elements_by_css_selector(
             '#content > div.summary_section > div.summary > div.text_area > h2 > span.sub_title > span:nth-child(2) > span > a > span'):
