@@ -25,13 +25,8 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
 
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
-          rel="stylesheet">
     <!-- Bootstrap core CSS -->
-
-    <link href="../static/css/login.css" rel="stylesheet">
+    <link href="../static/css/register.css" rel="stylesheet">
 
     <style>
         .bd-placeholder-img {
@@ -49,39 +44,15 @@
         }
 
     </style>
-
+    
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/login.css" rel="stylesheet">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
-    <script>
-
-        function login_submit() {
-            let id = $('._id').val();
-            let pw = $('._pw').val();
-            $.ajax({
-                type: "POST",
-                url: "/login",
-                data: {id: id, pw: pw},
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        let access_token = response['access_token'];
-                        $.cookie('access_token', access_token, {path: '/'});
-                        window.location.replace("/mypage")
-                    }
-                    else{
-                        alert(response['msg'])
-                    }
-                }
-            })
-
-        }
-
-
-    </script>
+    <!— font —>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+      <link href="../static/css/register.css" rel="stylesheet">
 </head>
 <body class="text-center">
 
@@ -93,26 +64,25 @@
              alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">In-Airpods</h1>
 
-        <div class="form-floating">
-            <div class="id">
-                <i class="icon"></i>
-                <input type="text" class="form-control  _id" id="floatingInput">
-            </div>
-        </div>
 
         <div class="form-floating">
-            <div class="pw">
-                <i class="icon"></i>
-                <input type="password" class="form-control _pw" id="floatingPassword" placeholder="pw">
+              <input type="text" class="form-control id" id="floatingInput" placeholder="id">
 
-            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control pw" id="floatingPassword" placeholder="pw">
+
+        </div>
+           <div class="form-floating">
+            <input type="password" class="form-control _pw" id="floatingPassword2" placeholder="pw check">
+
         </div>
 
-        <div class="btn-group" role="group" aria-label="...">
-            <button type="button" class="btn btn-default login" onclick="login_submit()">로그인</button>
-            <button type="button" class="btn btn-default"  onclick = "location.href = '/' "> 홈 </button>
-            <button type="button" class="btn btn-default register"   onclick = "location.href = '/register' ">회원가입</button>
-        </div>
+
+     <div class="btn-group" role="group" aria-label="...">
+       <button type="button" class="btn btn-default ">제출하기</button>
+        <button type="button" class="btn btn-default register">ID체크</button>
+    </div>
 
     </form>
 
@@ -122,5 +92,3 @@
 
 </body>
 </html>
-
-
