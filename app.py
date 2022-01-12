@@ -362,12 +362,26 @@ def post_comment():
     comment_receive = request.form['comment_give']
     today_receive = request.form['date_give']
     print(comment_receive,today_receive)
-    userid_receive = request.form['userID_give']
+    # userid_receive = request.form['user_id']
+    # 현재 로그인한 사용자의 아이디 가져오기
+    # SECRET_KEY = '123'
+    access_token = request.cookies.get('access_token')
+    user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
+    user_id = user_info['user_id']
+    article_id = request.form['article_id']
+
+    # 날짜 가져오기
+    time_now = datetime.now()
+    now_text = time_now.strftime("%Y{} %m{} %d{} %H{} %M{}")
+    now_text = now_text.format('년', '월', '일', '시', '분')
 
     doc = {
-        'comment': comment_receive,
-        'post_date': today_receive,
-        'userID': userid_receive
+        '_id': uuid.uuid4().hex,
+        'contents': comment_receive,
+        'post_date': now_text,
+        'user_id': user_id,
+        'article_id': article_id,
+        'commenter_name': "임시"
     }
     print(doc);
     db.comments.insert_one(doc)

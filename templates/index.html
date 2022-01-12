@@ -12,14 +12,13 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
-        rel="stylesheet">
-
+          rel="stylesheet">
 
 
     <!-- App CSS -->
@@ -28,14 +27,25 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <!--   JS 광훈 -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js">
+    <script type="text/javascript" >
 
+        function get_id() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    return response['user_id']
+
+                }
+            })
+        }
         //댓글 보여주기 항상 reload
 
         // 수정 버튼 클릭 시 해당 글 갖고와 textarea에 넣고 수정가능하게 만들기 (html수정하기)
@@ -51,32 +61,39 @@
             document.getElementById("input-data").value = reply;
             document.getElementById("putData").innerHTML = "";
         }
-       
-        //댓글 작성 저장
-        function submit_comment( article_id) {
-            let comment =$('#comment').val()
-            // document.getElementById('userID').value
-            let today = new Date().toLocaleString()
-            // 이름을 어떻게 가져올것인가?
-            // let name =
-            alret(get_id());
+
+
+        //댓글저장
+        function submit_comment(article_id) {
+            console.log("여기까지는 나오는가")
+
+            let comment = $('#comment').val()
+            console.log(comment)
+
+            let today = new Date().toISOString();
+            //get_id로 유저의 id를 받아옴
+            let name = get_id();
+            alert(name)
+
             $.ajax({
                 type: "POST",
                 url: "/api/single/post_comment",
                 data: {
                     'comment_give': comment,
                     'date_give': today,
-                    'userID_give': get_id()
+                    'article_id':article_id,
+                    'user_id':name
                 },
                 success: function (response) {
                     if (response["result"] == "success") {
-                        alert(response["msg"])
-                        $("#comment-box").removeClass("is-active")
-                        window.location.reload()
+                        alert(response["msg"]);
+                        $("#comment-box").removeClass("is-active");
+                        window.location.reload();
                     }
                 }
-            })
+            });
         }
+
 
         // 노래 앨범이미지, 가수, 앨범 제목, 노래제목 라이크 수 가져오기
         // article_id 가져와서 articles 테이블 데이터 가져오기
@@ -114,23 +131,18 @@
         }
 
 
-
-
     </script>
-
-
-
 
 
     <!--   JS 정현 -->
     <script type="text/javascript">
 
-            function logout() {
-                $.removeCookie("access_token", { path: '/' })
-                window.location.href = '/'
-            }
+        function logout() {
+            $.removeCookie("access_token", {path: '/'})
+            window.location.href = '/'
+        }
 
-            $(document).ready(function () {
+        $(document).ready(function () {
                 // 단일게시글 팝업창 닫아놓기
                 close_popup()
                 // 포스팅 팝업창 닫아놓기
@@ -138,105 +150,105 @@
                 get_id()
                 ifLoggedIn()
             }
-            );
+        );
 
-            function get_id() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/get_id",
-                    data: {},
-                    success: function (response) {
-                        return response['user_id']
+        function get_id() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    return response['user_id']
 
-                    }
-                })
-            }
+                }
+            })
+        }
 
-            function ifLoggedIn() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/get_id",
-                    data: {},
-                    success: function (response) {
+        function ifLoggedIn() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
 
-                        if (response['result'] !== 'success') {
-                            $('#myPgBtn').hide()
-                            $('#logoutBtn').hide()
-                        } else {
-                            $('#loginBtn').hide()
-
-                        }
-                    }
-                })
-            }
-
-
-            function like(article_id) {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/get_id",
-                    data: {},
-                    success: function (response) {
-                        if (response['result'] !== 'success') {
-                            alert("좋아요를 하시려면 로그인을 해주세요");
-                            ifLoggedIn()
-                        } else {
-                            $.ajax({
-                                type: 'POST',
-                                url: '/api/home/like',
-                                data: {
-                                    "article_id": article_id
-                                },
-                                success: function (response) {
-                                    alert(response['message']);
-                                    keyword_search();
-                                }
-                            });
-                        }
+                    if (response['result'] !== 'success') {
+                        $('#myPgBtn').hide()
+                        $('#logoutBtn').hide()
+                    } else {
+                        $('#loginBtn').hide()
 
                     }
-                })
+                }
+            })
+        }
 
 
-            }
+        function like(article_id) {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    if (response['result'] !== 'success') {
+                        alert("좋아요를 하시려면 로그인을 해주세요");
+                        ifLoggedIn()
+                    } else {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/api/home/like',
+                            data: {
+                                "article_id": article_id
+                            },
+                            success: function (response) {
+                                alert(response['message']);
+                                keyword_search();
+                            }
+                        });
+                    }
 
-           
-            function keyword_search() {
-                get_id()
-                ifLoggedIn()
+                }
+            })
 
-                let keyword = $('#input_search').val()
-                // alert(keyword)
-                // let keyword = $('#input_search').value;
-                //
-                if (keyword) {
-                    console.log(keyword)
-                    $('#cards-box').empty()
-                    $.ajax({
-                        type: "GET",
-                        url: "api/home/search_article",
-                        data: { 'keyword': keyword },
-                        success: function (response) {
-                            let articles = response["found_articles"]
 
-                            for (i = 0; i < articles.length; i++) {
-                                console.log(articles[i]['album_title'])
-                                let article_id = articles[i]['_id']
-                                let writer_id = articles[i]['writer_id']
-                                let writer_img = articles[i]['writer_img']
-                                let writer_name = articles[i]['writer_name']
-                                let title = articles[i]['album_title']
-                                let singer = articles[i]['album_singer']
-                                let image = articles[i]['album_image']
-                                let like = articles[i]['like']
-                                let date = articles[i]['post_date']
-                                let desc = articles[i]['article_description']
-                                let comment1 = articles[i]['comment1']
-                                let commenter1_img = articles[i]['commenter1_img']
-                                let comment2 = articles[i]['comment2']
-                                let commenter2_img = articles[i]['commenter2_img']
+        }
 
-                                let temp_html = `<div class="card" style="width: 18rem;">
+
+        function keyword_search() {
+            get_id()
+            ifLoggedIn()
+
+            let keyword = $('#input_search').val()
+            // alert(keyword)
+            // let keyword = $('#input_search').value;
+            //
+            if (keyword) {
+                console.log(keyword)
+                $('#cards-box').empty()
+                $.ajax({
+                    type: "GET",
+                    url: "api/home/search_article",
+                    data: {'keyword': keyword},
+                    success: function (response) {
+                        let articles = response["found_articles"]
+
+                        for (i = 0; i < articles.length; i++) {
+                            console.log(articles[i]['album_title'])
+                            let article_id = articles[i]['_id']
+                            let writer_id = articles[i]['writer_id']
+                            let writer_img = articles[i]['writer_img']
+                            let writer_name = articles[i]['writer_name']
+                            let title = articles[i]['album_title']
+                            let singer = articles[i]['album_singer']
+                            let image = articles[i]['album_image']
+                            let like = articles[i]['like']
+                            let date = articles[i]['post_date']
+                            let desc = articles[i]['article_description']
+                            let comment1 = articles[i]['comment1']
+                            let commenter1_img = articles[i]['commenter1_img']
+                            let comment2 = articles[i]['comment2']
+                            let commenter2_img = articles[i]['commenter2_img']
+
+                            let temp_html = `<div class="card" style="width: 18rem;">
                                             <img class="card-img-top"
                                                  src="${image}"
                                                  alt="Card image cap">
@@ -285,41 +297,39 @@
                                             </div>
                                         </div>`
 
-                                $('#cards-box').append(temp_html)
-                            }
+                            $('#cards-box').append(temp_html)
                         }
-                    })
-                } else {
-                    window.location.reload();
-                }
-
-
+                    }
+                })
+            } else {
+                window.location.reload();
             }
 
 
-
-            function close_popup() {
-                $('.window').hide()
-                $('.background').hide()
-
-            }
+        }
 
 
+        function close_popup() {
+            $('.window').hide()
+            $('.background').hide()
 
-            function show_popup(article_id) {
-                alert(article_id);
-                $('.window').show()
-                $('.background').show()
-                $.ajax({
-                    type: "GET",
-                    url: "/api/single",
-                    data: { "article_id": article_id },
-                    success: function (response) {
-                        comments = response['comments']
-                        article = response['article']
-                        console.log(comments,article)
-                        temp_html = `
-                <button type="button" class="close" aria-label="Close" id="close">
+        }
+
+
+        function show_popup(article_id) {
+            alert(article_id);
+            $('.window').show()
+            $('.background').show()
+            $.ajax({
+                type: "GET",
+                url: "/api/single",
+                data: {"article_id": article_id},
+                success: function (response) {
+                    comments = response['comments']
+                    article = response['article']
+                    console.log(comments, article)
+                    temp_html = `
+                <button type="button" class="close" onclick="close_popup()" aria-label="Close" id="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div class="album-wrap" style="padding-bottom: 10px">
@@ -355,7 +365,7 @@
                                 aria-label="Recipient's username" aria-describedby="button-addon2" id="comment">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="button-addon2"
-                                    onclick="submit_comment('${article['_id']}' )">
+                                    onclick="submit_comment('${article['_id']}')">
                                     입력
                                 </button>
                             </div>
@@ -402,42 +412,39 @@
                     </div>
                 </div>
                 `
-                $('.window').append(temp_html);
+                    $('.window').append(temp_html);
 
+                }
+            })
+
+
+        }
+
+
+        // 포스팅 팝업창 닫기/열기
+        function close_posting_popup() {
+            $('.modal-window').hide();
+            $('.modal-overlay').hide();
+        }
+
+        function show_posting_popup() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    if (response['result'] !== 'success') {
+                        alert("포스팅을 하시려면 로그인을 해주세요"); // todo 여기 지우셨던 이유 질문
+                        ifLoggedIn()
+                    } else {
+                        $('.modal-window').show();
+                        $('.modal-overlay').show();
                     }
-                })
 
+                }
+            })
+        }
 
-
-
-            }
-        
-
-            // 포스팅 팝업창 닫기/열기
-            function close_posting_popup() {
-                $('.modal-window').hide();
-                $('.modal-overlay').hide();
-            }
-
-            function show_posting_popup() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/get_id",
-                    data: {},
-                    success: function (response) {
-                        if (response['result'] !== 'success') {
-                            alert("포스팅을 하시려면 로그인을 해주세요"); // todo 여기 지우셨던 이유 질문
-                            ifLoggedIn()
-                        } else {
-                            $('.modal-window').show();
-                            $('.modal-overlay').show();
-                        }
-
-                    }
-                })
-            }
-
-         
 
     </script>
 
@@ -445,51 +452,51 @@
     <!--    한솔님 주신 javascript 코드 -->
     <script>
 
-            function previewArticle() {
-                let url = $('#url').val()
-                $.ajax({
-                    type: "POST",
-                    url: "/api/post/preview",
-                    data: { 'url_give': url },
-                    success: function (response) {
-                        $('#musics').empty()
+        function previewArticle() {
+            let url = $('#url').val()
+            $.ajax({
+                type: "POST",
+                url: "/api/post/preview",
+                data: {'url_give': url},
+                success: function (response) {
+                    $('#musics').empty()
 
-                        let title = response['title']
-                        let img = response['img']
-                        let singer = response['singer']
+                    let title = response['title']
+                    let img = response['img']
+                    let singer = response['singer']
 
-                        let temp =
-                            `<div class="card" style="width: 18rem;">
+                    let temp =
+                        `<div class="card" style="width: 18rem;">
                             <img class="card-img-top" src="${img}" alt="Card image cap">
                             <div class="card-body">
                                 <p class="title">${title}</p>
                                 <p class="singer">${singer}</p>
                             </div>
                            </div>`
-                        $('#musics').append(temp)
-                        // window.location.reload() //todo 지워졌던 부분 확인
-                    }
-                })
+                    $('#musics').append(temp)
+                    // window.location.reload() //todo 지워졌던 부분 확인
+                }
+            })
 
 
-            }
+        }
 
-            function postArticle() {
-                alert("asdasas")
+        function postArticle() {
+            alert("asdasas")
 
-                let url = $('#url').val()
-                let desc = $('#description').val()
+            let url = $('#url').val()
+            let desc = $('#description').val()
 
-                $.ajax({
-                    type: "POST",
-                    url: "/api/post/post_article",
-                    data: { url_give: url, desc_give: desc },
-                    success: function (response) {
-                        alert(response["msg"]);
-                        window.location.reload()
-                    }
-                })
-            }
+            $.ajax({
+                type: "POST",
+                url: "/api/post/post_article",
+                data: {url_give: url, desc_give: desc},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload()
+                }
+            })
+        }
 
 
     </script>
@@ -500,34 +507,34 @@
 <body>
 
 
-    <header id="header">
-        <div class="header">
+<header id="header">
+    <div class="header">
 
-            <div class="header_menu">
-                <a href="/mypage" id="myPgBtn" class="myPgBtn">My Page</a>
-                <a href="/login" id="loginBtn" class="loginBtn">Login</a>
-                {# todo logout 구현 #}
-                <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
-
-            </div>
+        <div class="header_menu">
+            <a href="/mypage" id="myPgBtn" class="myPgBtn">My Page</a>
+            <a href="/login" id="loginBtn" class="loginBtn">Login</a>
+            {# todo logout 구현 #}
+            <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
 
         </div>
-    </header>
 
-    <div class="wrap">
+    </div>
+</header>
 
-        <div class="logo">
-            InAirpod
-        </div>
+<div class="wrap">
 
-        <div class="wrap-box_search">
-            <input type="text" id="input_search" class="input_search" placeholder="검색어를 입력해주세요">
-            <button type="button" class="btn btn-search" onclick="keyword_search()">검색</button>
-        </div>
+    <div class="logo">
+        InAirpod
+    </div>
 
-        <!--  메인에서 카드박스  -->
-        <div class="card-box" id="cards-box">
-            {% for result in results %}
+    <div class="wrap-box_search">
+        <input type="text" id="input_search" class="input_search" placeholder="검색어를 입력해주세요">
+        <button type="button" class="btn btn-search" onclick="keyword_search()">검색</button>
+    </div>
+
+    <!--  메인에서 카드박스  -->
+    <div class="card-box" id="cards-box">
+        {% for result in results %}
             <!-- 이하 44라인정도 하나의 카드-->
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="{{ result['album_image'] }}" alt="Card image cap">
@@ -546,10 +553,10 @@
                         <p>댓글</p>
                         <div class="comment-box comment-box1">
                             {% if result['comment1'] %}
-                            <img class="commenter-img" src="{{ result['commenter1_img'] }}">
+                                <img class="commenter-img" src="{{ result['commenter1_img'] }}">
                             {% else %}
-                            <img class="commenter-img"
-                                src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                                <img class="commenter-img"
+                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
                             {% endif %}
 
                             <span class="comment-text">{{ result['comment1'] }}</span>
@@ -557,10 +564,10 @@
 
                         <div class="comment-box comment-box2">
                             {% if result['comment2'] %}
-                            <img class="commenter-img" src="{{ result['commenter2_img'] }}">
+                                <img class="commenter-img" src="{{ result['commenter2_img'] }}">
                             {% else %}
-                            <img class="commenter-img"
-                                src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                                <img class="commenter-img"
+                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
                             {% endif %}
 
                             <span class="comment-text">{{ result['comment2'] }}</span>
@@ -568,13 +575,13 @@
                     </div>
                     <div class="buttons-box">
                         <a href="#" onclick=like("{{ result['_id'] }}") style="cursor: pointer"
-                            class="card-footer-item has-text-info like-btn">
+                           class="card-footer-item has-text-info like-btn">
                             <i class="fas fa-heart"></i>
                             <span class="like-counts">{{ result['like'] }}</span>
                         </a>
 
                         <a href="#" onclick=show_popup("{{ result['_id'] }}")
-                            class="card-footer-item has-text-info show">
+                           class="card-footer-item has-text-info show">
                             <i class="fas fa-search-plus"></i>
                             <span class="like-counts">자세히보기</span>
                         </a>
@@ -583,64 +590,65 @@
 
                 </div>
             </div>
-            {% endfor %}
+        {% endfor %}
+
+    </div>
+
+
+    <!--   팝업(1) 단일글보기 / 광훈님-->
+    <div id="background" class="background">
+        <div class="window">
 
         </div>
+    </div>
+    <!--   팝업(2) 글작성 / 한솔님-->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
 
-
-        <!--   팝업(1) 단일글보기 / 광훈님-->
-        <div id="background" class="background">
-            <div class="window">
-               
-            </div>
-        </div>
-        <!--   팝업(2) 글작성 / 한솔님-->
-        <div id="modal" class="modal-overlay">
-            <div class="modal-window">
-
-                <div class="custom-shape-divider-bottom-1641970456">
-                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
-                        preserveAspectRatio="none">
-                        <path
+            <div class="custom-shape-divider-bottom-1641970456">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                     preserveAspectRatio="none">
+                    <path
                             d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
                             class="shape-fill"></path>
-                    </svg>
-                </div>
-
-                <div class="title">
-                    <h2></h2>
-                </div>
-                <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
-
-                <div class="content">
-
-                    <div class="form-group">
-                        <label for="url"></label>
-                        <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
-                    </div>
-                    <div>
-                        <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
-                    </div>
-
-                    <div class="card-columns" id="musics">
-                    </div>
-
-
-                    <div class="form-group">
-                        <label for="description"></label>
-                        <textarea id="description" class="form-control" rows="4" placeholder="comment"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="postArticle()">POST</button>
-                </div>
-
+                </svg>
             </div>
+
+            <div class="title">
+                <h2></h2>
+            </div>
+            <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
+
+            <div class="content">
+
+                <div class="form-group">
+                    <label for="url"></label>
+                    <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
+                </div>
+                <div>
+                    <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
+                </div>
+
+                <div class="card-columns" id="musics">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="description"></label>
+                    <textarea id="description" class="form-control" rows="4" placeholder="comment"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="postArticle()">POST</button>
+            </div>
+
         </div>
     </div>
+</div>
 
-    </div>
+</div>
 
-    <a id="post-button" href="#" onclick="show_posting_popup()">post</a>
+<a id="post-button" href="#" onclick="show_posting_popup()">post</a>
 </body>
-//<script src="../static/main.js"></script>
+//
+<script src="../static/main.js"></script>
 
 </html>
