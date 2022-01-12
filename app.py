@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import pymongo
 from flask import Flask, render_template, request, redirect, jsonify, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
+import os 
 
 
 app = Flask(__name__)
@@ -229,5 +230,113 @@ def make_doc(articles, comments):
 
 ##########################################################################
 
+# 한솔님 크롤링
+from selenium import webdriver
+# from webdriver_manager.chrome import ChromeDriverManager
+# driver = webdriver.Chrome(ChromeDriverManager().install())
+import time
+
+options = webdriver.ChromeOptions()
+options.add_argument("headless") # 화면 띄우기 없음
+
+
+@app.route('/api/post/preview', methods=['POST'])
+def preview():
+    url_receive = request.form['url_give']
+
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+
+    driver = webdriver.Chrome('./chromedriver', options=options)
+    driver.implicitly_wait(1)
+    url = url_receive
+    driver.get(url)
+    time.sleep(3)
+
+    temp_title = ''
+    temp_singer = ''
+
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.title'):
+        title = (i.text)
+        temp_title = title[3:]
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.sub_title > span:nth-child(2) > span > a > span'):
+        singer = (i.text)
+        temp_singer = singer
+
+    temp_img = driver.find_element_by_css_selector("#content > div.summary_section > div.summary_thumb > img").get_attribute(
+        'src')
+
+    return jsonify({'img': temp_img, 'title':temp_title, 'singer':temp_singer})
+
+@app.route('/api/post/post_article', methods=['POST'])
+def post_article():
+    url_receive = request.form['url_give']
+    desc_receive = request.form['desc_give']
+    #user_id_receive = request.form['user_id_give']
+
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+    print(options);
+
+    driver = webdriver.Chrome('./chromedriver', options=options)
+    driver.implicitly_wait(1)
+    url = url_receive
+    driver.get(url)
+    time.sleep(3)
+
+    temp_title = ''
+    temp_singer = ''
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.title'):
+        title = (i.text)
+        temp_title = title[3:]
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.sub_title > span:nth-child(2) > span > a > span'):
+        singer = (i.text)
+        temp_singer = singer
+
+    temp_img = driver.find_element_by_css_selector(
+        "#content > div.summary_section > div.summary_thumb > img").get_attribute(
+        'src')
+
+    # 현재 로그인한 사용자의 아이디 가져오기
+    # SECRET_KEY = '123'
+    access_token = request.cookies.get('access_token')
+    user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
+    user_id = user_info['user_id']
+
+    # 날짜 가져오기
+    time_now = datetime.now()
+    now_text = time_now.strftime("%Y{} %m{} %d{} %H{} %M{}")
+    now_text = now_text.format('년', '월', '일', '시', '분')
+
+    # 아티클 doc 생성
+    #todo 회원가입시 이름도 받는다면, 토큰에서 찾은 id를 가지고 userDB에서 이름도 찾아올 수 있을 것.
+    doc = {
+        "_id": uuid.uuid4().hex,
+        "user_id": user_id,
+        "writer_name":"임시이름~",
+        'article_url' : url_receive,
+        'article_description' : desc_receive,
+        'album_image' : temp_img,
+        'album_title':temp_title,
+        'album_singer':temp_singer,
+        'post_date': now_text,
+        'like':0
+        #'user_id' : user_id_receive
+    }
+
+    db.articles.insert_one(doc)
+
+    return jsonify({'msg':'포스팅 완료'})
+
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5008, debug=True)
