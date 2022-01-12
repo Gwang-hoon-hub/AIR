@@ -315,7 +315,19 @@ def post_article():
 
     return jsonify({'msg':'포스팅 완료'})
 
+pw_hash = bcrypt.generate_password_hash('hansol');
 
+user = {
+    '_id': uuid.uuid4().hex,
+    'user_id':'hansol',
+    'user_nick' :'hansol',
+    'pwd':pw_hash,
+    'introduce' : '반가워요',
+    "user_img" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCDtrAa2AHVZH2tE8AxxaGSZsJQaFZ8iJoCA&usqp=CAU",
+    "liked_articles":[]
+
+}
+db.users.insert_one(user)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5008, debug=True)
