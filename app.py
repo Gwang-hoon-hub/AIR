@@ -244,7 +244,11 @@ options.add_argument("headless") # 화면 띄우기 없음
 @app.route('/api/post/preview', methods=['POST'])
 def preview():
     url_receive = request.form['url_give']
-    driver = webdriver.Chrome('./chromedriver')
+
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+
+    driver = webdriver.Chrome('./chromedriver', options=options)
     driver.implicitly_wait(1)
     url = url_receive
     driver.get(url)
@@ -275,8 +279,11 @@ def post_article():
     desc_receive = request.form['desc_give']
     #user_id_receive = request.form['user_id_give']
 
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
 
-    driver = webdriver.Chrome('./chromedriver')
+
+    driver = webdriver.Chrome('./chromedriver', options=options)
     driver.implicitly_wait(1)
     url = url_receive
     driver.get(url)
