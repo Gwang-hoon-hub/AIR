@@ -38,27 +38,74 @@
             // 단일게시글 팝업창 닫아놓기
             close_popup()
             // 포스팅 팝업창 닫아놓기
-            close_posting_popup()
-
+            close_posting_popup();
+            get_id()
+            ifLoggedIn()
         });
+
+        function get_id() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    console.log(response)
+
+                }
+            })
+        }
+
+        function ifLoggedIn() {
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    console.log(response)
+
+                    if (response['result'] !== 'success') {
+                        $('#myPgBtn').hide()
+                        $('#logoutBtn').hide()
+                    } else {
+                        $('#loginBtn').hide()
+
+                    }
+                }
+            })
+        }
+
 
         function like(article_id) {
             $.ajax({
-                type: 'POST',
-                url: '/api/home/like',
-                data: {
-                    "article_id": article_id
-                },
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
                 success: function (response) {
-                    // alert(response['message']);
-                    // window.location.reload();
-                    keyword_search();
-                    // $('.like-btn').load(location.href+' .like-btn');
+                    if (response['result'] !== 'success') {
+                        alert("좋아요를 하시려면 로그인을 해주세요")
+                    } else {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/api/home/like',
+                            data: {
+                                "article_id": article_id
+                            },
+                            success: function (response) {
+                                alert(response['message']);
+                                keyword_search();
+                            }
+                        });
+                    }
+
                 }
-            });
+            })
+
+
         }
 
         function keyword_search() {
+            get_id()
+            ifLoggedIn()
 
             let keyword = $('#input_search').val()
             // alert(keyword)
@@ -263,8 +310,10 @@
     <div class="header">
 
         <div class="header_menu">
-            <a href="/mypage" class="myPgBtn">My Page</a>
-            <a href="/login" class="loginBtn">Login</a>
+            <a href="/mypage" id="myPgBtn" class="myPgBtn">My Page</a>
+            <a href="/login" id="loginBtn" class="loginBtn">Login</a>
+            <a href="/logout" id="logoutBtn" class="loginBtn">Logout</a>
+
         </div>
 
     </div>
@@ -284,65 +333,65 @@
     <!--  메인에서 카드박스  -->
     <div class="card-box" id="cards-box">
         {% for result in results %}
-        <!-- 이하 44라인정도 하나의 카드-->
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top"
-                 src="{{ result['album_image'] }}"
-                 alt="Card image cap">
-            <div class="card-body">
-                <span class="title">{{result['album_title']}}</span>
+            <!-- 이하 44라인정도 하나의 카드-->
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top"
+                     src="{{ result['album_image'] }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <span class="title">{{ result['album_title'] }}</span>
 
-                <span class="singer">{{result['album_singer']}}</span>
-                <div class="writer-box">
-                    <img class="writer-img"
-                         src="{{ result['writer_img'] }}">
-                    <span class="comment-text">{{result['writer_name']}}</span>
-                </div>
-                <div class="description">{{ result['article_description'] }}</div>
-                <div class="date">{{result['post_date']}}</div>
-                <span class="article_id__invisible">{{result['_id']}}</span>
-                <div class="comments-wrap">
-                    <p>댓글</p>
-                    <div class="comment-box comment-box1">
-                        {% if result['comment1'] %}
-                        <img class="commenter-img"
-                             src="{{result['commenter1_img']}}">
-                        {% else %}
-                        <img class="commenter-img"
-                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
-                        {% endif %}
+                    <span class="singer">{{ result['album_singer'] }}</span>
+                    <div class="writer-box">
+                        <img class="writer-img"
+                             src="{{ result['writer_img'] }}">
+                        <span class="comment-text">{{ result['writer_name'] }}</span>
+                    </div>
+                    <div class="description">{{ result['article_description'] }}</div>
+                    <div class="date">{{ result['post_date'] }}</div>
+                    <span class="article_id__invisible">{{ result['_id'] }}</span>
+                    <div class="comments-wrap">
+                        <p>댓글</p>
+                        <div class="comment-box comment-box1">
+                            {% if result['comment1'] %}
+                                <img class="commenter-img"
+                                     src="{{ result['commenter1_img'] }}">
+                            {% else %}
+                                <img class="commenter-img"
+                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                            {% endif %}
 
-                        <span class="comment-text">{{result['comment1']}}</span>
+                            <span class="comment-text">{{ result['comment1'] }}</span>
+                        </div>
+
+                        <div class="comment-box comment-box2">
+                            {% if result['comment2'] %}
+                                <img class="commenter-img"
+                                     src="{{ result['commenter2_img'] }}">
+                            {% else %}
+                                <img class="commenter-img"
+                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                            {% endif %}
+
+                            <span class="comment-text">{{ result['comment2'] }}</span>
+                        </div>
+                    </div>
+                    <div class="buttons-box">
+                        <a href="#" onclick=like("{{ result['_id'] }}") style="cursor: pointer"
+                           class="card-footer-item has-text-info like-btn">
+                            <i class="fas fa-heart"></i>
+                            <span class="like-counts">{{ result['like'] }}</span>
+                        </a>
+
+                        <a href="#" onclick="show_popup()" class="card-footer-item has-text-info show">
+                            <i class="fas fa-search-plus"></i>
+                            <span class="like-counts">자세히보기</span>
+                        </a>
                     </div>
 
-                    <div class="comment-box comment-box2">
-                        {% if result['comment2'] %}
-                        <img class="commenter-img"
-                             src="{{result['commenter2_img']}}">
-                        {% else %}
-                        <img class="commenter-img"
-                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
-                        {% endif %}
 
-                        <span class="comment-text">{{result['comment2']}}</span>
-                    </div>
                 </div>
-                <div class="buttons-box">
-                    <a href="#" onclick=like "{{result['_id']}}" style="cursor: pointer"
-                       class="card-footer-item has-text-info like-btn">
-                        <i class="fas fa-heart"></i>
-                        <span class="like-counts">{{result['like']}}</span>
-                    </a>
-
-                    <a href="#" onclick="show_popup()" class="card-footer-item has-text-info show">
-                        <i class="fas fa-search-plus"></i>
-                        <span class="like-counts">자세히보기</span>
-                    </a>
-                </div>
-
-
             </div>
-        </div>
         {% endfor %}
 
     </div>

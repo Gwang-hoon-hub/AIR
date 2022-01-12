@@ -33,7 +33,6 @@ app.register_blueprint(home_route.bp)
 app.register_blueprint(single_route.bp)
 app.register_blueprint(post_route.bp)
 
-
 # 이 조건을 달지 않으면, css같은 사항 변화를 12시간마다 체크한다. 즉 디버깅모드에서는 불편하므로, 디버깅시에는 1초로 변경하는 것.
 if app.config['DEBUG']:
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
@@ -43,30 +42,32 @@ if app.config['DEBUG']:
 @app.route('/')
 def home():
     modified_all_articles = []
-    all_articles = list(db.articles.find(
-        {}, {}).sort('like', pymongo.DESCENDING))
+    all_articles = list(db.articles.find().sort('like', pymongo.DESCENDING))
+    # find 모든 doc의 모든 필드값 가져오는 것 find({},{})이게 왜 이 파일에서는 적용이 안 될까?  (이유 찾아보기!_정현)
+    # 덕분에 find()도 작동한다는 걸 알게 되긴 했다.
 
     for article in all_articles:
         id = article['_id']
 
         # 글쓴이의 이미지를 userDb에서 가져오기
         writer_id = article['user_id']
-        writer_img = db.users.find_one({'user_id': writer_id}, {})['user_img']
+        writer_img = db.users.find_one({'user_id': writer_id}, {'user_img': 1})['user_img']
         article['writer_img'] = writer_img
 
-        comments = list(db.comments.find({'user_id': id}, {}).sort(
+        comments = list(db.comments.find({'article_id': id}, {'contents': 1, 'user_id': 1}).sort(
             'post_date', pymongo.DESCENDING))
+        print(comments)
         if len(comments) != 0:
             comment1 = comments[0]['contents']
-            commenter1_id = comments[0]['commenter_id']
+            commenter1_id = comments[0]['user_id']
             commenter1_img = db.users.find_one(
-                {'user_id': commenter1_id}, {})['user_img']
+                {'user_id': commenter1_id}, {'user_img': 1})['user_img']
             article['commenter1_img'] = commenter1_img
             if len(comments) >= 2:
                 comment2 = comments[1]['contents']
-                commenter2_id = comments[1]['commenter_id']
+                commenter2_id = comments[1]['user_id']
                 commenter2_img = db.users.find_one(
-                    {'user_id': commenter2_id}, {})['user_img']
+                    {'user_id': commenter2_id}, {'user_img': 1})['user_img']
                 article['commenter2_img'] = commenter2_img
             else:
                 comment2 = ""
@@ -76,11 +77,13 @@ def home():
 
         article['comment1'] = comment1
         article['comment2'] = comment2
+        print(comment1, comment2)
         modified_all_articles.append(article)
 
     return render_template('index.html', results=modified_all_articles)
 
 
+#
 ###########로그인 추가 - 라우팅파일x -호준###########################################
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -91,7 +94,7 @@ def login():
     elif (request.method == 'POST'):
         id = request.form['id']
         pw = request.form['pw']
-        #pw_hash = bcrypt.generate_password_hash(pw);
+        # pw_hash = bcrypt.generate_password_hash(pw);
 
         user = db.users.find_one({"user_id": id}, {'_id': False})
 
@@ -125,11 +128,13 @@ def login():
 @app.route('/api/get_id')
 def get_id():
     access_token = request.cookies.get('access_token')
+
+    print(f"get_id에서 토큰확인 {request.cookies.get('access_token')}")
     try:
         user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
         print(user_info)
 
-        return jsonify({'result':'success' , 'user_id':user_info['user_id']})
+        return jsonify({'result': 'success', 'user_id': user_info['user_id']})
 
     except jwt.ExpiredSignatureError:
         print('로그인만료')
@@ -142,9 +147,8 @@ def get_id():
     except jwt.InvalidSignatureError:
         print('잘못된서명')
         msg = "잘못된서명"
-    
-    return jsonify({'result':'fail','msg':msg})
-        
+
+    return jsonify({'result': 'fail', 'msg': msg})
 
 
 ###############마이페이지######################################################
@@ -156,8 +160,9 @@ def mypage():
     if (request.method == 'GET'):
         return check_token(access_token)
 
-#만약 권한이 있다면 render_template("mypage");
-#없다면 redirect("/login");
+
+# 만약 권한이 있다면 render_template("mypage");
+# 없다면 redirect("/login");
 
 
 ###############################################################################
@@ -184,6 +189,7 @@ def check_token(access_token):
 
     return redirect(url_for("login"))
 
+
 ###############################################################################
 
 
@@ -194,7 +200,7 @@ def get_data(user_id):
     return articles
 
 
-#아직 작성중
+# 아직 작성중
 def make_doc(articles, comments):
     articles = list(db.articles.find({'user_id': "jun"}))
     comments = list(db.comments.find({'user_id': "jun"}))
@@ -208,72 +214,9 @@ def make_doc(articles, comments):
             if article_id == comment['article_id']:
                 article_comment.insert(comment)
         doc.insert({"article": article, "comment": comment})
+
+
 ##########################################################################
 
-#  광훈님 api (--> single_route파일로 분리해보았습니다__정현)
-# 카드 클릭 시 단일 게시물 보여주기
-#
-# # 댓글작성 (POST) API
-# @app.route('/api/single/post_comment', methods=['POST'])
-# def post_comment():
-#     comment_receive = request.form['comment_give']
-#     today_receive = request.form['date_give']
-#     userId_receive = request.form['userID_give']
-# # # 유저의 아이디와 이름을 어떻게 가져와야 할지 몰라서 doc에 유저이름이 없습니다! - 연습하고 있는거에는 id를 던지고 있는데 해당 프로젝트에서는 아직 안되서...
-# #     doc = {
-# #         '_id'
-# #         'contents': comment_receive,
-# #         'post_date': today_receive,
-# #         'commenter_id': userId_receive
-# #     }
-# #     db.comments.insert_one(doc)
-#
-#     print(comment_receive, today_receive, userId_receive)
-#     return jsonify({'result': 'success', 'msg': '저장 완료!'})
-
-
-# 카드 클릭 시 단일 게시물 보여주기
-
-# # 댓글리스트로 보여주기
-# @app.route('/memo', methods=['GET'])
-# def listing():
-#     comments = list(db.prac12.find({},{'_id':False}))
-#     print(comments)
-#     return jsonify({'all_comments':comments})
-#
-#
-# # 유저체크하기
-# @app.route('/api/single/check_user', methods=['GET'])
-# def checkUser():
-#
-#     user = db.users.find_one({'name': 'bobby'})
-#
-#     title_receive = request.form['title_give']
-#     db.prac12.update_one({'title': title_receive})
-#
-#     # db.users.update_one({'name': 'bobby'}, {'$set': {'age': 19}})
-#
-#     return jsonify({'msg': '수정완료!'})
-
-# # 댓글수정
-# @app.route('/api/single/update_comment', methods=['POST'])
-# def update_comment():
-#
-#     title_receive = request.form['title_give']
-#     db.prac12.update_one({'title': title_receive})
-#
-#     # db.users.update_one({'name': 'bobby'}, {'$set': {'age': 19}})
-#
-#     return jsonify({'msg': '수정완료!'})
-#
-# # 댓글삭제
-# @app.route('/api/single/delete_comment', methods=['POST'])
-# def delete_comment():
-#     title_receive = request.form['title_give']
-#     db.prac12.delete_one({'title': title_receive})
-#
-#     return jsonify({'msg': '삭제완료!'})
-#
-
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5003, debug=True)
+    app.run(host="0.0.0.0", port=5008, debug=True)
