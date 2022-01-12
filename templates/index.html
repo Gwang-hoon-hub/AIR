@@ -222,8 +222,23 @@
         }
 
         function show_posting_popup() {
-            $('.modal-window').show();
-            $('.modal-overlay').show();
+            $.ajax({
+                type: "GET",
+                url: "/api/get_id",
+                data: {},
+                success: function (response) {
+                    if (response['result'] !== 'success') {
+                        alert("포스팅을 하시려면 로그인을 해주세요");
+                        ifLoggedIn()
+                    } else {
+                        $('.modal-window').show();
+                        $('.modal-overlay').show();
+                    }
+
+                }
+            })
+
+
         }
 
         //후기를 작성하면 서버로 내용을 보내서 저장하는 함수
@@ -483,33 +498,33 @@
 
     <!--   팝업(2) 글작성 / 한솔님-->
     <div id="modal" class="modal-overlay">
-    <div class="modal-window">
-        <div class="title">
-            <h2>게시글 작성</h2>
+        <div class="modal-window">
+            <div class="title">
+                <h2>게시글 작성</h2>
+            </div>
+            <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
+
+            <div class="content">
+                <div class="form-group">
+                    <label for="url"></label>
+                    <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
+                </div>
+                <div>
+                    <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
+                </div>
+
+                <div class="card-columns" id="musics">
+                </div>
+
+                <div class="form-group">
+                    <label for="description"></label>
+                    <textarea id="description" class="form-control" rows="4" placeholder="comment"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="postArticle()">POST</button>
+            </div>
+
         </div>
-        <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
-
-        <div class="content">
-            <div class="form-group">
-                <label for="url"></label>
-                <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
-            </div>
-            <div>
-                <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
-            </div>
-
-            <div class="card-columns" id="musics">
-            </div>
-
-            <div class="form-group">
-                <label for="description"></label>
-                <textarea id="description" class="form-control" rows="4" placeholder="comment"></textarea>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="postArticle()">POST</button>
-        </div>
-
     </div>
-</div>
 </div>
 
 </div>
