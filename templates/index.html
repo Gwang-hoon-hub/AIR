@@ -212,6 +212,35 @@
 
         }
 
+        function comment() {
+            console.log("여기까지는 나오는가")
+            let comment = document.getElementById('comment').value; 4
+            console.log(comment)
+            let userID = document.getElementById('userID').value;
+            let today = new Date().toISOString();
+            //get_id로 유저의 id를 받아옴 
+            let name = get_id();
+
+            console.log(comment);
+            console.log(today);
+            alert(today, comment);
+            $.ajax({
+                type: "POST",
+                url: "/api/single/post_comment",
+                data: {
+                    comment_give: comment,
+                    date_give: today,
+                    userID_give: userID
+                },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"]);
+                        $("#comment-box").removeClass("is-active");
+                        window.location.reload();
+                    }
+                }
+            });
+        }
 
         function keyword_search() {
             get_id()
@@ -339,7 +368,7 @@
                             <div class="media-body">
                                 <h5 class="mt-0" style="padding-top: 10px">${article['album_title']}</h5>
                                 <h6 class="mt-0">${article['album_singer']}</h6>
-                                
+
                                 <p><a href="#" onclick="like('${article['article_id']}')" style="cursor: pointer"
                                         class="card-footer-item has-text-info like-btn">
                                         <i class="fas fa-heart"></i>
@@ -354,8 +383,8 @@
                         </div>
                     </div>
                 </div>
-            
-               
+
+
 
 
                 <div class="card">
@@ -371,7 +400,7 @@
                             </div>
                         </div>
                         <ul class="list-group">
-                
+
                             <div id="box">
                                 <li class="media" xmlns="http://www.w3.org/1999/html">
                                     <img class="mr-31"
@@ -406,8 +435,8 @@
                                     </div>
                                 </li>
                             </div>
-                            
-                        
+
+
                         </ul>
                     </div>
                 </div>
@@ -648,7 +677,6 @@
 
 <a id="post-button" href="#" onclick="show_posting_popup()">post</a>
 </body>
-//
-<script src="../static/main.js"></script>
+{#<script src="../static/main.js"></script>#}
 
 </html>
