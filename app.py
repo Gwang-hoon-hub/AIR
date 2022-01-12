@@ -31,7 +31,7 @@ db = client.mini
 # 다른 API 경로들 파일 연결
 
 app.register_blueprint(home_route.bp)
-app.register_blueprint(single_route.bp)
+#app.register_blueprint(single_route.bp)
 # app.register_blueprint(post_route.bp)
 
 # 이 조건을 달지 않으면, css같은 사항 변화를 12시간마다 체크한다. 즉 디버깅모드에서는 불편하므로, 디버깅시에는 1초로 변경하는 것.
@@ -111,7 +111,7 @@ def login():
         else:
             payload = {
                 'user_id': id,
-                'exp': datetime.utcnow() + timedelta(seconds=60)  # 1분
+                'exp': datetime.utcnow() + timedelta(seconds=600)  # 1분
             }
             access_token = jwt.encode(payload, SECRET_KEY)  # Default: "HS256"
 
@@ -335,6 +335,83 @@ def post_article():
     db.articles.insert_one(doc)
 
     return jsonify({'msg':'포스팅 완료'})
+
+
+
+###########광훈님 ###################################
+@app.route('/api/single')
+def single():
+   
+    article_id =request.args.get("article_id")
+    comments = list(db.comments.find({'article_id':article_id}))
+    article = list( db.articles.find( {'_id':article_id}))[0]
+
+    # return jsonify({'all_comments': comments})
+   # return render_template("index.html", comment_give=comments, articles_give=article)
+    return jsonify({'comments':comments , 'article': article })
+
+# 카드 클릭 시 단일 게시물 보여주기
+
+
+
+
+
+# 댓글작성 (POST) API
+@app.route('/api/single/post_comment', methods=['POST'])
+def post_comment():
+    comment_receive = request.form['comment_give']
+    today_receive = request.form['date_give']
+    print(comment_receive,today_receive)
+    userid_receive = request.form['userID_give']
+
+    doc = {
+        'comment': comment_receive,
+        'post_date': today_receive,
+        'userID': userid_receive
+    }
+    print(doc);
+    db.comments.insert_one(doc)
+
+    return jsonify({'result': 'success', 'msg': '저장 완료!'})
+
+
+
+# 카드 클릭 시 단일 게시물 보여주기
+
+# # 댓글리스트로 보여주기
+# @app.route('/api/single/showComment', methods=['GET'])
+# def listing():
+#     comments = list(db.comments.find({    },{'_id':False}))
+
+#     return jsonify({'all_comments':comments})
+
+#댓글
+
+
+
+# 댓글수정
+@app.route('/api/single/update_comment', methods=['POST'])
+def update_comment():
+    comment_id = request.form['comment_id']
+    update_comment = request.form['updateComment_give']
+    updateDate_receive = request.form['updateDate_give']
+
+    db.comments.update_one({'_id': comment_id}, {'$set': {'comment': update_comment,
+    'updateDate':updateDate_receive}})
+
+    # db.users.update_one({'name': 'bobby'}, {'$set': {'age': 19}})
+
+    return jsonify({'result': 'success', 'msg': '수정완료!'})
+
+# 댓글삭제
+@app.route('/api/single/delete_comment', methods=['POST'])
+def delete_comment():
+    userID_receive = request.form['userID_give']
+    print(userID_receive)
+    db.prac12.delete_one({'userID': userID_receive})
+
+    return jsonify({'result': 'success','msg': '삭제완료!'})
+
 
 
 

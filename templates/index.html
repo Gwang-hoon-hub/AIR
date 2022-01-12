@@ -33,153 +33,210 @@
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
+    <!--   JS 광훈 -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js">
+
+        //댓글 보여주기 항상 reload
+
+        // 수정 버튼 클릭 시 해당 글 갖고와 textarea에 넣고 수정가능하게 만들기 (html수정하기)
+        function get_update_comment(num) {
+            updateBtnCheck = true;
+            $('#update').hide()
+            $('#updateComplete').show()
+            console.log(updateBtnCheck);
+            // 수정 권한을 갖는 유저인지 체크 먼저하기!
+            $('#input-data').show();
+            document.getElementById("input-data").style.display = "block";
+            let reply = document.getElementById("putData").innerText;
+            document.getElementById("input-data").value = reply;
+            document.getElementById("putData").innerHTML = "";
+        }
+       
+        //댓글 작성 저장
+        function submit_comment( article_id) {
+            let comment =$('#comment').val()
+            // document.getElementById('userID').value
+            let today = new Date().toLocaleString()
+            // 이름을 어떻게 가져올것인가?
+            // let name =
+            alret(get_id());
+            $.ajax({
+                type: "POST",
+                url: "/api/single/post_comment",
+                data: {
+                    'comment_give': comment,
+                    'date_give': today,
+                    'userID_give': get_id()
+                },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"])
+                        $("#comment-box").removeClass("is-active")
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
+        // 노래 앨범이미지, 가수, 앨범 제목, 노래제목 라이크 수 가져오기
+        // article_id 가져와서 articles 테이블 데이터 가져오기
+
+        // 댓글 수정하기 완료
+        function updateComment(comment_id) {
+            // let update_comment = document.getElementById('update-data').textContent;
+
+            let update_comment = $('#input-data').val()
+            let today = new Date().toLocaleString()
+            console.log(update_comment)
+
+            if (updateBtnCheck == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/single/update_comment",
+                    data: {
+                        comment_id: comment_id,
+                        updateComment_give: update_comment,
+                        updateDate_give: today
+                    },
+                    success: function (response) {
+                        if (response["result"] == "success") {
+                            alert(response["msg"])
+                            // $("#comment-box").removeClass("is-active")
+                            window.location.reload()
+                        }
+                    }
+                })
+            }
+        }
+
+        // 댓글 삭제하기
+        function deleteComment(userID) {
+        }
+
+
+
+
+    </script>
+
+
 
 
 
     <!--   JS 정현 -->
     <script type="text/javascript">
 
-        function logout() {
-            $.removeCookie("access_token", { path: '/' })
-            window.location.href = '/'
-        }
+            function logout() {
+                $.removeCookie("access_token", { path: '/' })
+                window.location.href = '/'
+            }
 
-         $(document).ready(function () {
-             // 단일게시글 팝업창 닫아놓기
-             close_popup()
-             // 포스팅 팝업창 닫아놓기
-             close_posting_popup();
-             get_id()
-             ifLoggedIn()
-         }
-        );
+            $(document).ready(function () {
+                // 단일게시글 팝업창 닫아놓기
+                close_popup()
+                // 포스팅 팝업창 닫아놓기
+                close_posting_popup();
+                get_id()
+                ifLoggedIn()
+            }
+            );
 
-        function get_id() {
-            $.ajax({
-                type: "GET",
-                url: "/api/get_id",
-                data: {},
-                success: function (response) {
-                        return response['user_id']
-
-                }
-            })
-        }
-
-        function ifLoggedIn() {
-            $.ajax({
-                type: "GET",
-                url: "/api/get_id",
-                data: {},
-                success: function (response) {
-
-                    if (response['result'] !== 'success') {
-                        $('#myPgBtn').hide()
-                        $('#logoutBtn').hide()
-                    } else {
-                        $('#loginBtn').hide()
-
-                    }
-                }
-            })
-        }
-
-
-        function like(article_id) {
-            $.ajax({
-                type: "GET",
-                url: "/api/get_id",
-                data: {},
-                success: function (response) {
-                    if (response['result'] !== 'success') {
-                        alert("좋아요를 하시려면 로그인을 해주세요");
-                        ifLoggedIn()
-                    } else {
-                        $.ajax({
-                            type: 'POST',
-                            url: '/api/home/like',
-                            data: {
-                                "article_id": article_id
-                            },
-                            success: function (response) {
-                                alert(response['message']);
-                                keyword_search();
-                            }
-                        });
-                    }
-
-                }
-            })
-
-
-        }
-
-        function comment() {
-            console.log("여기까지는 나오는가")
-            let comment = document.getElementById('comment').value; 4
-            console.log(comment)
-            let userID = document.getElementById('userID').value;
-            let today = new Date().toISOString();
-            //get_id로 유저의 id를 받아옴 
-            let name = get_id();
-
-            console.log(comment);
-            console.log(today);
-            alert(today, comment);
-            $.ajax({
-                type: "POST",
-                url: "/api/single/post_comment",
-                data: {
-                    comment_give: comment,
-                    date_give: today,
-                    userID_give: userID
-                },
-                success: function (response) {
-                    if (response["result"] == "success") {
-                        alert(response["msg"]);
-                        $("#comment-box").removeClass("is-active");
-                        window.location.reload();
-                    }
-                }
-            });
-        }
-
-        function keyword_search() {
-            get_id()
-            ifLoggedIn()
-
-            let keyword = $('#input_search').val()
-            // alert(keyword)
-            // let keyword = $('#input_search').value;
-            //
-            if (keyword) {
-                console.log(keyword)
-                $('#cards-box').empty()
+            function get_id() {
                 $.ajax({
                     type: "GET",
-                    url: "api/home/search_article",
-                    data: { 'keyword': keyword },
+                    url: "/api/get_id",
+                    data: {},
                     success: function (response) {
-                        let articles = response["found_articles"]
+                        return response['user_id']
 
-                        for (i = 0; i < articles.length; i++) {
-                            console.log(articles[i]['album_title'])
-                            let article_id = articles[i]['_id']
-                            let writer_id = articles[i]['writer_id']
-                            let writer_img = articles[i]['writer_img']
-                            let writer_name = articles[i]['writer_name']
-                            let title = articles[i]['album_title']
-                            let singer = articles[i]['album_singer']
-                            let image = articles[i]['album_image']
-                            let like = articles[i]['like']
-                            let date = articles[i]['post_date']
-                            let desc = articles[i]['article_description']
-                            let comment1 = articles[i]['comment1']
-                            let commenter1_img = articles[i]['commenter1_img']
-                            let comment2 = articles[i]['comment2']
-                            let commenter2_img = articles[i]['commenter2_img']
+                    }
+                })
+            }
 
-                            let temp_html = `<div class="card" style="width: 18rem;">
+            function ifLoggedIn() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/get_id",
+                    data: {},
+                    success: function (response) {
+
+                        if (response['result'] !== 'success') {
+                            $('#myPgBtn').hide()
+                            $('#logoutBtn').hide()
+                        } else {
+                            $('#loginBtn').hide()
+
+                        }
+                    }
+                })
+            }
+
+
+            function like(article_id) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/get_id",
+                    data: {},
+                    success: function (response) {
+                        if (response['result'] !== 'success') {
+                            alert("좋아요를 하시려면 로그인을 해주세요");
+                            ifLoggedIn()
+                        } else {
+                            $.ajax({
+                                type: 'POST',
+                                url: '/api/home/like',
+                                data: {
+                                    "article_id": article_id
+                                },
+                                success: function (response) {
+                                    alert(response['message']);
+                                    keyword_search();
+                                }
+                            });
+                        }
+
+                    }
+                })
+
+
+            }
+
+           
+            function keyword_search() {
+                get_id()
+                ifLoggedIn()
+
+                let keyword = $('#input_search').val()
+                // alert(keyword)
+                // let keyword = $('#input_search').value;
+                //
+                if (keyword) {
+                    console.log(keyword)
+                    $('#cards-box').empty()
+                    $.ajax({
+                        type: "GET",
+                        url: "api/home/search_article",
+                        data: { 'keyword': keyword },
+                        success: function (response) {
+                            let articles = response["found_articles"]
+
+                            for (i = 0; i < articles.length; i++) {
+                                console.log(articles[i]['album_title'])
+                                let article_id = articles[i]['_id']
+                                let writer_id = articles[i]['writer_id']
+                                let writer_img = articles[i]['writer_img']
+                                let writer_name = articles[i]['writer_name']
+                                let title = articles[i]['album_title']
+                                let singer = articles[i]['album_singer']
+                                let image = articles[i]['album_image']
+                                let like = articles[i]['like']
+                                let date = articles[i]['post_date']
+                                let desc = articles[i]['article_description']
+                                let comment1 = articles[i]['comment1']
+                                let commenter1_img = articles[i]['commenter1_img']
+                                let comment2 = articles[i]['comment2']
+                                let commenter2_img = articles[i]['commenter2_img']
+
+                                let temp_html = `<div class="card" style="width: 18rem;">
                                             <img class="card-img-top"
                                                  src="${image}"
                                                  alt="Card image cap">
@@ -228,88 +285,159 @@
                                             </div>
                                         </div>`
 
-                            $('#cards-box').append(temp_html)
+                                $('#cards-box').append(temp_html)
+                            }
                         }
-                    }
-                })
-            } else {
-                window.location.reload();
+                    })
+                } else {
+                    window.location.reload();
+                }
+
+
             }
 
 
-        }
 
+            function close_popup() {
+                $('.window').hide()
+                $('.background').hide()
 
-        // 단일아티클 및 댓글작성 팝업창 닫기/열기
-        function close_popup() {
-            $('.window').hide()
-            $('.background').hide()
-
-        }
-
-        // todo 클릭한 아티클의 데이터도 팝업 뷰에 전달해야 함
-        function show_popup(article_id) {
-            $('.window').show()
-            $('.background').show()
+            }
 
 
 
-        }
+            function show_popup(article_id) {
+                alert(article_id);
+                $('.window').show()
+                $('.background').show()
+                $.ajax({
+                    type: "GET",
+                    url: "/api/single",
+                    data: { "article_id": article_id },
+                    success: function (response) {
+                        comments = response['comments']
+                        article = response['article']
+                        console.log(comments,article)
+                        temp_html = `
+                <button type="button" class="close" aria-label="Close" id="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="album-wrap" style="padding-bottom: 10px">
+                    <div class="album-img">
+                        <div class="media">
+                            <img class="mr-3" src= ${article['album_image']} alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0" style="padding-top: 10px">${article['album_title']}</h5>
+                                <h6 class="mt-0">${article['album_singer']}</h6>
+                                
+                                <p><a href="#" onclick="like('${article['article_id']}')" style="cursor: pointer"
+                                        class="card-footer-item has-text-info like-btn">
+                                        <i class="fas fa-heart"></i>
+                                        <span class="like-counts"> ${article['like']}</span>
+                                    </a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="user-comment-div">
+                        <div class="card-body">
+                            ${article['article_description']}
+                        </div>
+                    </div>
+                </div>
+            
+               
 
-        // 포스팅 팝업창 닫기/열기
-        function close_posting_popup() {
-            $('.modal-window').hide();
-            $('.modal-overlay').hide();
-        }
 
-        function show_posting_popup() {
-            $.ajax({
-                type: "GET",
-                url: "/api/get_id",
-                data: {},
-                success: function (response) {
-                    if (response['result'] !== 'success') {
-                        alert("포스팅을 하시려면 로그인을 해주세요"); // todo 여기 지우셨던 이유 질문
-                        ifLoggedIn()
-                    } else {
-                        $('.modal-window').show();
-                        $('.modal-overlay').show();
+                <div class="card">
+                    <div class="card-body1">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control eee" placeholder="댓글 입력!"
+                                aria-label="Recipient's username" aria-describedby="button-addon2" id="comment">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                    onclick="submit_comment('${article['_id']}' )">
+                                    입력
+                                </button>
+                            </div>
+                        </div>
+                        <ul class="list-group">
+                
+                            <div id="box">
+                                <li class="media" xmlns="http://www.w3.org/1999/html">
+                                    <img class="mr-31"
+                                        src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAzMDFfMTY4%2FMDAxNTgzMDYxMTI3Mzcw.dMYeeDAJq6MPBVzEEZkY5fgWsuUPAFdEfoufAmzz5NUg.3G-OzT-ecdZspnCMJVYAa2mnDcyj6-12W-EAefLw1rkg.JPEG.z___s2%2F20200229_225235.jpg&type=a340"
+                                        id="img-size"
+                                        style="max-width: 10%; height: auto; border-radius: 100% 100% 100% 100% ">
+                                    <div class="media-body1" style="margin-left: 20px">
+                                        <p><strong>${comments[0]['user_id']}
+                                                </strong>
+                                                <small>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</small><small>
+                                              ${comments[0]['post_date']}</small>
+                                        </p>
+
+                                        <div >
+                                            <input type="text" id="input-data" style="display: none" value="" size="40">
+                                            <p id="putData" style="display: block">${comments[0]['contents']}: i는
+                                                </p>
+                                            </input>
+                                        </div>
+                                        <a href='javascript:void(0);'
+                                            onclick="get_update_comment(${comments[0]['_id']});"><span
+                                                class="badge badge-primary" style="vertical-align: text-after-edge"
+                                                id="update">수정</span></a>
+                                        <a href='javascript:void(0);'
+                                            onclick="updateComment(${comments[0]['_id']});"><span
+                                                class="badge badge-primary" style="vertical-align: text-after-edge"
+                                                id="updateComplete">수정완료</span></a>
+                                        <a href='javascript:void(0);'
+                                            onclick="deleteComment((${comments[0]['_id']});"><span
+                                                class="badge badge-danger" style="vertical-align: text-after-edge"
+                                                id="delete">삭제</span></a>
+                                    </div>
+                                </li>
+                            </div>
+                            
+                        
+                        </ul>
+                    </div>
+                </div>
+                `
+                $('.window').append(temp_html);
+
                     }
+                })
 
-                }
-            })
-        }
 
-        //후기를 작성하면 서버로 내용을 보내서 저장하는 함수
-        function comment() {
-            console.log("여기까지는 나오는가")
-            let comment = document.getElementById('comment').value;
-            let userID = document.getElementById('userID').value;
-            // todo  userID를 입력해서 받아오는 것인지 질문(정현)
-            let today = new Date().toISOString();
-            // 이름을 어떻게 가져올것인가?
-            // let name =
-            console.log(comment);
-            console.log(today);
 
-            $.ajax({
-                type: "POST",
-                url: "/api/single/post_comment",
-                data: {
-                    comment_give: comment,
-                    date_give: today
-                    // userID_give: userID
-                },
-                success: function (response) {
-                    if (response["result"] == "success") {
-                        alert(response["msg"]);
-                        $("#comment-box").removeClass("is-active");
-                        window.location.reload();
+
+            }
+        
+
+            // 포스팅 팝업창 닫기/열기
+            function close_posting_popup() {
+                $('.modal-window').hide();
+                $('.modal-overlay').hide();
+            }
+
+            function show_posting_popup() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/get_id",
+                    data: {},
+                    success: function (response) {
+                        if (response['result'] !== 'success') {
+                            alert("포스팅을 하시려면 로그인을 해주세요"); // todo 여기 지우셨던 이유 질문
+                            ifLoggedIn()
+                        } else {
+                            $('.modal-window').show();
+                            $('.modal-overlay').show();
+                        }
+
                     }
-                }
-            });
-        }
+                })
+            }
 
+         
 
     </script>
 
@@ -317,51 +445,51 @@
     <!--    한솔님 주신 javascript 코드 -->
     <script>
 
-        function previewArticle() {
-            let url = $('#url').val()
-            $.ajax({
-                type: "POST",
-                url: "/api/post/preview",
-                data: { 'url_give': url },
-                success: function (response) {
-                    $('#musics').empty()
+            function previewArticle() {
+                let url = $('#url').val()
+                $.ajax({
+                    type: "POST",
+                    url: "/api/post/preview",
+                    data: { 'url_give': url },
+                    success: function (response) {
+                        $('#musics').empty()
 
-                    let title = response['title']
-                    let img = response['img']
-                    let singer = response['singer']
+                        let title = response['title']
+                        let img = response['img']
+                        let singer = response['singer']
 
-                    let temp =
-                        `<div class="card" style="width: 18rem;">
+                        let temp =
+                            `<div class="card" style="width: 18rem;">
                             <img class="card-img-top" src="${img}" alt="Card image cap">
                             <div class="card-body">
                                 <p class="title">${title}</p>
                                 <p class="singer">${singer}</p>
                             </div>
                            </div>`
-                    $('#musics').append(temp)
-                    // window.location.reload() //todo 지워졌던 부분 확인
-                }
-            })
+                        $('#musics').append(temp)
+                        // window.location.reload() //todo 지워졌던 부분 확인
+                    }
+                })
 
 
-        }
+            }
 
-        function postArticle() {
-            alert("asdasas")
+            function postArticle() {
+                alert("asdasas")
 
-            let url = $('#url').val()
-            let desc = $('#description').val()
+                let url = $('#url').val()
+                let desc = $('#description').val()
 
-            $.ajax({
-                type: "POST",
-                url: "/api/post/post_article",
-                data: {url_give: url, desc_give: desc},
-                success: function (response) {
-                    alert(response["msg"]);
-                    window.location.reload()
-                }
-            })
-        }
+                $.ajax({
+                    type: "POST",
+                    url: "/api/post/post_article",
+                    data: { url_give: url, desc_give: desc },
+                    success: function (response) {
+                        alert(response["msg"]);
+                        window.location.reload()
+                    }
+                })
+            }
 
 
     </script>
@@ -445,10 +573,10 @@
                             <span class="like-counts">{{ result['like'] }}</span>
                         </a>
 
-                        <a href="#" onclick="show_popup({{ result['_id'] }})"
+                        <a href="#" onclick=show_popup("{{ result['_id'] }}")
                             class="card-footer-item has-text-info show">
                             <i class="fas fa-search-plus"></i>
-                            <span class="like-counts" onclick="modalOpen()">자세히보기</span>
+                            <span class="like-counts">자세히보기</span>
                         </a>
                     </div>
 
@@ -459,111 +587,43 @@
 
         </div>
 
+
         <!--   팝업(1) 단일글보기 / 광훈님-->
         <div id="background" class="background">
             <div class="window">
-                <!--            <div class="wrap">-->
-                <button type="button" class="close" aria-label="Close" id="close" onclick="close_popup()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="album-wrap" style="padding-bottom: 10px">
-                    <div class="album-img">
-                        <div class="media">
-                            <img class="mr-3" src="../static/post.png" alt="Generic placeholder image">
-                            <div class="media-body">
-                                <h5 class="mt-0" style="padding-top: 10px">앨범 제목</h5>
-                                <h6 class="mt-0">가수</h6>
-                                노래 제목
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            This is some text within a card body. 코멘트 들어간다!!
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body1">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="댓글 입력!"
-                                aria-label="Recipient's username" aria-describedby="button-addon2" id="comment">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2"
-                                    onclick="comment()">
-                                    입력
-                                </button>
-                            </div>
-                        </div>
-                        <ul class="list-group">
-                            <li class="media">
-                                <img class="mr-31"
-                                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAzMDFfMTY4%2FMDAxNTgzMDYxMTI3Mzcw.dMYeeDAJq6MPBVzEEZkY5fgWsuUPAFdEfoufAmzz5NUg.3G-OzT-ecdZspnCMJVYAa2mnDcyj6-12W-EAefLw1rkg.JPEG.z___s2%2F20200229_225235.jpg&type=a340"
-                                    alt="이미지 안나오면 나옴">
-                                <div class="media-body1">
-                                    <p><strong>아이디</strong><small><b></b>-<b></b></small><small>날짜</small></p>
-                                    Donec sed odio dui. natoque penatibus et magnis dis parturient montes, nascetur
-                                    ridiculus
-                                    mus.
-                                    <a href='javascript:void(0);' onclick="updateComment();"><span
-                                            class="badge badge-primary" style="vertical-align: text-after-edge"
-                                            id="update">수정</span></a>
-                                    <a href='javascript:void(0);' onclick="deleteComment();"><span
-                                            class="badge badge-danger" style="vertical-align: text-after-edge"
-                                            id="delete">삭제</span></a>
-                                </div>
-                            </li>
-                            <li class="media">
-                                <img class="mr-31"
-                                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAzMDFfMTY4%2FMDAxNTgzMDYxMTI3Mzcw.dMYeeDAJq6MPBVzEEZkY5fgWsuUPAFdEfoufAmzz5NUg.3G-OzT-ecdZspnCMJVYAa2mnDcyj6-12W-EAefLw1rkg.JPEG.z___s2%2F20200229_225235.jpg&type=a340"
-                                    alt="이미지 안나오면 나옴">
-                                <div class="media-body1">
-                                    <p><strong>아이디</strong><small><b></b>-<b></b></small><small>날짜</small></p>
-                                    Donec sed odio dui. natoque penatibus et magnis dis parturient montes, nascetur
-                                    ridiculus
-                                    mus.
-                                    <span class="badge badge-primary" style="vertical-align: text-after-edge"
-                                        id="update1">수정</span>
-                                    <span class="badge badge-danger" style="vertical-align: text-after-edge"
-                                        id="delete1">삭제</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!--            </div>-->
+               
             </div>
         </div>
+        <!--   팝업(2) 글작성 / 한솔님-->
+        <div id="modal" class="modal-overlay">
+            <div class="modal-window">
 
-    <!--   팝업(2) 글작성 / 한솔님-->
-    <div id="modal" class="modal-overlay">
-        <div class="modal-window">
+                <div class="custom-shape-divider-bottom-1641970456">
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                        preserveAspectRatio="none">
+                        <path
+                            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                            class="shape-fill"></path>
+                    </svg>
+                </div>
 
-            <div class="custom-shape-divider-bottom-1641970456">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
-                     preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-                          class="shape-fill"></path>
-                </svg>
-            </div>
-
-            <div class="title">
-                <h2></h2>
-            </div>
-            <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
+                <div class="title">
+                    <h2></h2>
+                </div>
+                <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
 
                 <div class="content">
 
-                <div class="form-group">
-                    <label for="url"></label>
-                    <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
-                </div>
-                <div>
-                    <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
-                </div>
+                    <div class="form-group">
+                        <label for="url"></label>
+                        <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
+                    </div>
+                    <div>
+                        <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
+                    </div>
 
-                <div class="card-columns" id="musics">
-                </div>
+                    <div class="card-columns" id="musics">
+                    </div>
 
 
                     <div class="form-group">
@@ -581,6 +641,6 @@
 
     <a id="post-button" href="#" onclick="show_posting_popup()">post</a>
 </body>
-<script src="../static/main.js"></script>
+//<script src="../static/main.js"></script>
 
 </html>
