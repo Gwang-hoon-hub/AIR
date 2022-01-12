@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    <!— font —>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+    <link href="../static/css/register.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "/mypage",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'fail') {
+                        alert(response['msg'])
+                        window.location.replace('/login')
+                    } else {
+
+                    }
+                }
+            })
+        });
+
+        function article_delete() {
+            $.ajax({
+                type: "GET",
+                url: "/mypage/delete",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'fail') {
+                        alert(response['msg'])
+                        return ;
+                    } else {
+                        alert(response['msg']);
+
+
+                    }
+                }
+            })
+
+        }
+
+
+    </script>
+
+</head>
+<body>
+<div class="wrap">
+    <div class="banner">
+        <div class="welcome"> In-Airpods</div>
+
+        <div class="temp">
+            <a href="/">main | </a>
+            <a href="">Logout</a>
+        </div>
+
+    </div>
+
+    <div class="profile">
+        <table>
+            <tr>
+                <td><img class="profile-picture" ,algin="left"
+                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvCd6w2KxHY-S8Prx9t1IAC1eGWybJNV0OMw&usqp=CAU">
+                </td>
+                <td>
+                    <span class="badge badge-primary">{{ user_id }}의 공간</span>
+                    <!--posting box -->
+
+
+                    <!--posting box -->
+                    <div class="card comment">
+                        <div class="card-body">
+                            어허
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- 이하 44라인정도 하나의 카드-->
+    <div class="card-box" id="cards-box">
+
+        {% for result in results %}
+        <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top"
+                 src="{{ result['album_image'] }}"
+                 alt="Card image cap">
+            <div class="card-body">
+                <span class="title">{{result['album_title']}}</span>
+
+                <span class="singer">{{result['album_singer']}}</span>
+                <div class="writer-box">
+                    <img class="writer-img"
+                         src="{{ result['user_img'] }}">
+                    <span class="comment-text">{{result['user_id']}}</span>
+                </div>
+                <div class="description">{{ result['article_description'] }}</div>
+                <div class="date">{{result['post_date']}}</div>
+                <span class="article_id__invisible">{{result['_id']}}</span>
+                <div class="comments-wrap">
+                    <p>댓글</p>
+                    <div class="comment-box comment-box1">
+                        {% if result['comment1'] %}
+                        <img class="commenter-img"
+                             src="{{result['commenter1_img']}}">
+                        {% else %}
+                        <img class="commenter-img"
+                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                        {% endif %}
+
+                        <span class="comment-text">{{result['comment1']}}</span>
+                    </div>
+
+                    <div class="comment-box comment-box2">
+                        {% if result['comment2'] %}
+                        <img class="commenter-img"
+                             src="{{result['commenter2_img']}}">
+                        {% else %}
+                        <img class="commenter-img"
+                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                        {% endif %}
+
+                        <span class="comment-text">{{result['comment2']}}</span>
+                    </div>
+                </div>
+                <div class="buttons-box">
+                    <a href="#" onclick="" class="card-footer-item has-text-info">
+                        <i class="fas fa-search-plus"></i>
+                        <span class="like-counts">자세히보기</span>
+                    </a>
+
+                    <a href="#" onclick="article_delete()" style="cursor: pointer"
+                       class="card-footer-item has-text-info like-btn">
+                        <i class="fas fa-heart"></i>
+                        <span class="like-counts">삭제하기</span>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+        {% endfor %}
+        <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
+
+    </div>
+
+</div>
+</body>
+</html>

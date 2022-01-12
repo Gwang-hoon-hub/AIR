@@ -1,0 +1,352 @@
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* 헤더*/
+
+.header {
+    width: 100%;
+    height: 50px;
+    background-color: #5a2ff4;
+    padding: 0.3rem;
+}
+
+.header .header_menu {
+    text-align: right;
+
+}
+
+
+.header .header_menu a {
+    text-decoration: none;
+    color: #afbff7;
+    display: inline-block;
+    margin-right: 40px;
+    margin-top: 5px;
+    text-align: end;
+    transition: color 0.3s ease;
+    font-size: 20px;
+}
+
+.header .header_menu a:hover {
+    color: rgb(255, 255, 255);
+}
+
+/*전체 wrap*/
+.wrap {
+    width: 1000px;
+    margin: auto;
+}
+
+.wrap .logo {
+    font-size: 40px;
+    font-family: 'Lobster', cursive;
+    width: 200px;
+    margin: auto;
+    color: #4925ca;
+    margin-top: 40px;
+}
+
+/* 검색 창 라인*/
+.input_search {
+    width: 650px;
+    margin-left: 95px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    border-width: thick;
+    border-collapse: collapse;
+    border-color: #5a2ff4;
+    font-size: large;
+    padding: 5px 10px
+}
+
+.btn-search {
+    background-color: #5a2ff4;
+    color: #fff;
+    width: 70px;
+    height: 45px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+.btn-search:hover {
+    background-color: #7b76d7;
+}
+
+/* 카드박스*/
+.card-box {
+    width: 1000px;
+    margin: auto;
+    align-items: center;
+}
+
+/*단일 카드 설정*/
+.card {
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translate(0, -5px);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    transition-duration: 0.6s;
+}
+
+.card .title {
+    font-weight: bold;
+    display: inline-block;
+
+}
+
+.like-btn {
+    display: inline-block;
+}
+
+
+.card .like-counts {
+    font-size: 11px;
+}
+
+.card .singer {
+    display: block;
+    font-size: 13px;
+}
+
+.card .writer-box {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.card .writer-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.card .writer-name {
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.card .description {
+    background-color: #dce3f9;
+    border-radius: 20px;
+    padding: 15px;
+    width: 245px;
+    height: 60px;
+    /*-webkit-line-clamp: 2;*/
+    -webkit-box-orient: vertical;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.card .date {
+    text-align: end;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.article_id__invisible {
+    visibility: hidden;
+}
+
+.card .comment-box {
+    margin-top: 7px;
+}
+
+.card .commenter-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.comments-wrap {
+    height: 107px;
+}
+
+.comment-text {
+    font-size: 14px;
+    font-weight: lighter;
+
+    /*!*-webkit-line-clamp: 2;*!*/
+    /*-webkit-box-orient: vertical;*/
+    /*white-space : nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+}
+
+.card .buttons-box {
+    margin-top: 20px;
+}
+
+.card .buttons-box a {
+    margin-left: 45px;
+}
+
+#post-button {
+  background-color: rgb(157, 159, 222);
+  width: 40px;
+  height: 40px;
+  text-align: center;
+
+  border-radius: 20px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  /*transition-property: background-color, opacity, visibility;*/
+  /*transition-duration: 0.3s, 0.5s, 0.5s;*/
+  /*opacity: 0;*/
+  /*visibility: hidden;*/
+  /*z-index: 999;*/
+}
+
+
+/* 광훈님 주신 css */
+.background {
+    display: block;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+    border-radius: 10px;
+    position: absolute;
+}
+
+.window {
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(13.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    width: 50%;
+    height: 85%;
+    position: absolute;
+    padding: 10px;
+    overflow: auto;
+    display: block;
+}
+
+.album-img {
+    margin: 20px 20px 20px 20px;
+}
+
+.mr-3 {
+    max-width: 50%;
+    height: auto;
+    vertical-align: middle;
+}
+
+.mr-31 {
+    max-width: 10%;
+    height: auto;
+    border-radius: 100% 100% 100% 100%;
+    vertical-align: middle;
+}
+
+.media {
+    padding: 20px 10px 20px 10px;
+}
+
+.media-body1 {
+    padding: 0px 0px 0px 20px;
+}
+
+/* 한솔님 주신 css*/
+
+* {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(153, 51, 204, 0.14);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        #modal .modal-window {
+
+            background: rgba(255, 255, 255, 2);
+            box-shadow: 0 8px 32px 0 rgba(51, 51, 51, 0.5);
+            backdrop-filter: blur(13.5px);
+            -webkit-backdrop-filter: blur(13.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+            width: 700px;
+            height: 900px;
+            position: relative;
+            padding: 10px;
+        }
+
+        #modal .title {
+            padding-left: 10px;
+            letter-spacing: 2px;
+            word-spacing: 4px;
+            display: inline;
+            color: black;
+
+        }
+
+        #modal .title h2 {
+            display: inline;
+        }
+
+        #modal .close-area {
+            display: inline;
+            float: right;
+            padding-right: 10px;
+            cursor: pointer;
+            color: black;
+        }
+
+        #modal .content {
+            margin-top: 20px;
+            padding: 0px 10px;
+            color: black;
+        }
+
+        .btn-primary {
+            color: black;
+            margin: auto;
+            display: flex;
+        }
+
+        .preview_btn {
+            position: absolute;
+            margin-left: 84%;
+            background-color: transparent;
+            border: solid 1px;
+            font-size: 10px;
+            padding: 3px;
+
+
+        }

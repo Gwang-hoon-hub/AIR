@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+    <!--   JS 정현 -->
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // 단일게시글 팝업창 닫아놓기
+            close_popup()
+            // 포스팅 팝업창 닫아놓기
+            close_posting_popup()
+
+        });
+
+        function like(article_id) {
+            $.ajax({
+                type: 'POST',
+                url: '/api/home/like',
+                data: {
+                    "article_id": article_id
+                },
+                success: function (response) {
+                    // alert(response['message']);
+                    // window.location.reload();
+                    keyword_search();
+                    // $('.like-btn').load(location.href+' .like-btn');
+                }
+            });
+        }
+
+        function keyword_search() {
+
+            let keyword = $('#input_search').val()
+            // alert(keyword)
+            // let keyword = $('#input_search').value;
+            //
+            if (keyword) {
+                console.log(keyword)
+                $('#cards-box').empty()
+                $.ajax({
+                    type: "GET",
+                    url: "api/home/search_article",
+                    data: {'keyword': keyword},
+                    success: function (response) {
+                        let articles = response["found_articles"]
+
+                        for (i = 0; i < articles.length; i++) {
+                            console.log(articles[i]['album_title'])
+                            let article_id = articles[i]['_id']
+                            let writer_id = articles[i]['writer_id']
+                            let writer_img = articles[i]['writer_img']
+                            let writer_name = articles[i]['writer_name']
+                            let title = articles[i]['album_title']
+                            let singer = articles[i]['album_singer']
+                            let image = articles[i]['album_image']
+                            let like = articles[i]['like']
+                            let date = articles[i]['post_date']
+                            let desc = articles[i]['article_description']
+                            let comment1 = articles[i]['comment1']
+                            let commenter1_img = articles[i]['commenter1_img']
+                            let comment2 = articles[i]['comment2']
+                            let commenter2_img = articles[i]['commenter2_img']
+
+                            let temp_html = `<div class="card" style="width: 18rem;">
+                                            <img class="card-img-top"
+                                                 src="${image}"
+                                                 alt="Card image cap">
+                                            <div class="card-body">
+                                                <span class="title">${title}</span>
+
+                                                <span class="singer">${singer}</span>
+                                                <div class="writer-box">
+                                                    <img class="writer-img"
+                                                         src="${writer_img}">
+                                                    <span class="writer-name">${writer_name}</span>
+                                                </div>
+                                                <div class="description">${desc}</div>
+                                                <div class="date">${date}</div>
+                                                <span class="article_id__invisible">${article_id}</span>
+                                                <div class="comments-wrap">
+                                                    <p>댓글</p>
+                                                    <div class="comment-box comment-box1">
+                                                        <img class="commenter-img"
+                                                             src="${commenter1_img}"
+                                                             onerror="this.src='https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800'">
+                                                        <span class="comment-text">${comment1}</span>
+                                                    </div>
+
+                                                    <div class="comment-box comment-box2">
+                                                        <img class="commenter-img"
+                                                             src="${commenter2_img}"
+                                                             onerror="this.src='https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800'"
+                                                             >
+                                                        <span class="comment-text">${comment2}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="buttons-box">
+                                                    <a href="#" onclick="like('${article_id}')" style="cursor: pointer" class="card-footer-item has-text-info like-btn">
+                                                        <i class="fas fa-heart"></i>
+                                                        <span class="like-counts">${like}</span>
+                                                    </a>
+
+                                                    <a href=# onclick="" class="card-footer-item has-text-info show">
+                                                        <i class="fas fa-search-plus"></i>
+                                                        <span class="like-counts">자세히보기</span>
+                                                    </a>
+                                                </div>
+
+
+                                            </div>
+                                        </div>`
+
+                            $('#cards-box').append(temp_html)
+                        }
+                    }
+                })
+            } else {
+                window.location.reload();
+            }
+
+
+        }
+
+
+        // 단일아티클 및 댓글작성 팝업창 닫기/열기
+        function close_popup() {
+            $('.window').hide()
+            $('.background').hide()
+
+        }
+
+        function show_popup() {
+            $('.window').show()
+            $('.background').show()
+        }
+
+        // 포스팅 팝업창 닫기/열기
+        function close_posting_popup() {
+            $('.modal-window').hide();
+            $('.modal-overlay').hide();
+        }
+
+        function show_posting_popup() {
+            $('.modal-window').show();
+            $('.modal-overlay').show();
+        }
+
+        //후기를 작성하면 서버로 내용을 보내서 저장하는 함수
+        function comment() {
+            console.log("여기까지는 나오는가")
+            let comment = document.getElementById('comment').value;
+            // let userID = document.getElementById('userID').value;
+            let today = new Date().toISOString();
+            // 이름을 어떻게 가져올것인가?
+            // let name =
+            console.log(comment);
+            console.log(today);
+
+            $.ajax({
+                type: "POST",
+                url: "/api/single/post_comment",
+                data: {
+                    comment_give: comment,
+                    date_give: today
+                    // userID_give: userID
+                },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"]);
+                        $("#comment-box").removeClass("is-active");
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+
+    <!--    한솔님 주신 javascript 코드 -->
+    <script>
+
+
+        // const closeBtn = modal.querySelector(".close-area")
+        // closeBtn.addEventListener("click", e => {
+        //     modal.style.display = "none"
+        // })
+
+        function previewArticle() {
+            // alert("프리뷰클릭")
+            let url = $('#url').val()
+
+            console.log(url)
+
+            $.ajax({
+                type: "POST",
+                url: "/api/post/preview",
+                data: {'url_give': url},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload()
+                }
+            })
+
+
+        }
+
+        function postArticle() {
+            let url = $('url').val()
+            let desc = $('description').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/api/post",
+                data: {url_give: url, desc_give: desc},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload()
+                }
+            })
+        }
+
+
+    </script>
+
+
+</head>
+<body>
+
+
+<header id="header">
+    <div class="header">
+
+        <div class="header_menu">
+            <a href="/mypage" class="myPgBtn">My Page</a>
+            <a href="/login" class="loginBtn">Login</a>
+        </div>
+
+    </div>
+</header>
+
+<div class="wrap">
+
+    <div class="logo">
+        InAirpod
+    </div>
+
+    <div class="wrap-box_search">
+        <input type="text" id="input_search" class="input_search" placeholder="검색어를 입력해주세요">
+        <button type="button" class="btn btn-search" onclick="keyword_search()">검색</button>
+    </div>
+
+    <!--  메인에서 카드박스  -->
+    <div class="card-box" id="cards-box">
+        {% for result in results %}
+        <!-- 이하 44라인정도 하나의 카드-->
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top"
+                 src="{{ result['album_image'] }}"
+                 alt="Card image cap">
+            <div class="card-body">
+                <span class="title">{{result['album_title']}}</span>
+
+                <span class="singer">{{result['album_singer']}}</span>
+                <div class="writer-box">
+                    <img class="writer-img"
+                         src="{{ result['writer_img'] }}">
+                    <span class="comment-text">{{result['writer_name']}}</span>
+                </div>
+                <div class="description">{{ result['article_description'] }}</div>
+                <div class="date">{{result['post_date']}}</div>
+                <span class="article_id__invisible">{{result['_id']}}</span>
+                <div class="comments-wrap">
+                    <p>댓글</p>
+                    <div class="comment-box comment-box1">
+                        {% if result['comment1'] %}
+                        <img class="commenter-img"
+                             src="{{result['commenter1_img']}}">
+                        {% else %}
+                        <img class="commenter-img"
+                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                        {% endif %}
+
+                        <span class="comment-text">{{result['comment1']}}</span>
+                    </div>
+
+                    <div class="comment-box comment-box2">
+                        {% if result['comment2'] %}
+                        <img class="commenter-img"
+                             src="{{result['commenter2_img']}}">
+                        {% else %}
+                        <img class="commenter-img"
+                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                        {% endif %}
+
+                        <span class="comment-text">{{result['comment2']}}</span>
+                    </div>
+                </div>
+                <div class="buttons-box">
+                    <a href="#" onclick=like "{{result['_id']}}" style="cursor: pointer"
+                       class="card-footer-item has-text-info like-btn">
+                        <i class="fas fa-heart"></i>
+                        <span class="like-counts">{{result['like']}}</span>
+                    </a>
+
+                    <a href="#" onclick="show_popup()" class="card-footer-item has-text-info show">
+                        <i class="fas fa-search-plus"></i>
+                        <span class="like-counts">자세히보기</span>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <!--   팝업(1) 단일글보기 / 광훈님-->
+    <div id="background" class="background">
+        <div class="window">
+            <!--            <div class="wrap">-->
+            <button type="button" class="close" aria-label="Close" id="close" onclick="close_popup()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="album-wrap" style="padding-bottom: 10px">
+                <div class="album-img">
+                    <div class="media">
+                        <img class="mr-3" src="../static/post.png" alt="Generic placeholder image">
+                        <div class="media-body">
+                            <h5 class="mt-0" style="padding-top: 10px">앨범 제목</h5>
+                            <h6 class="mt-0">가수</h6>
+                            노래 제목
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        This is some text within a card body. 코멘트 들어간다!!
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body1">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="댓글 입력!"
+                               aria-label="Recipient's username" aria-describedby="button-addon2" id="comment">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                    onclick="comment()">
+                                입력
+                            </button>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="media">
+                            <img class="mr-31"
+                                 src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAzMDFfMTY4%2FMDAxNTgzMDYxMTI3Mzcw.dMYeeDAJq6MPBVzEEZkY5fgWsuUPAFdEfoufAmzz5NUg.3G-OzT-ecdZspnCMJVYAa2mnDcyj6-12W-EAefLw1rkg.JPEG.z___s2%2F20200229_225235.jpg&type=a340"
+                                 alt="이미지 안나오면 나옴">
+                            <div class="media-body1">
+                                <p><strong>아이디</strong><small><b></b>-<b></b></small><small>날짜</small></p>
+                                Donec sed odio dui. natoque penatibus et magnis dis parturient montes, nascetur
+                                ridiculus
+                                mus.
+                                <a href='javascript:void(0);' onclick="updateComment();"><span
+                                        class="badge badge-primary" style="vertical-align: text-after-edge" id="update">수정</span></a>
+                                <a href='javascript:void(0);' onclick="deleteComment();"><span
+                                        class="badge badge-danger" style="vertical-align: text-after-edge" id="delete">삭제</span></a>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <img class="mr-31"
+                                 src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAzMDFfMTY4%2FMDAxNTgzMDYxMTI3Mzcw.dMYeeDAJq6MPBVzEEZkY5fgWsuUPAFdEfoufAmzz5NUg.3G-OzT-ecdZspnCMJVYAa2mnDcyj6-12W-EAefLw1rkg.JPEG.z___s2%2F20200229_225235.jpg&type=a340"
+                                 alt="이미지 안나오면 나옴">
+                            <div class="media-body1">
+                                <p><strong>아이디</strong><small><b></b>-<b></b></small><small>날짜</small></p>
+                                Donec sed odio dui. natoque penatibus et magnis dis parturient montes, nascetur
+                                ridiculus
+                                mus.
+                                <span class="badge badge-primary" style="vertical-align: text-after-edge"
+                                      id="update1">수정</span>
+                                <span class="badge badge-danger" style="vertical-align: text-after-edge"
+                                      id="delete1">삭제</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--            </div>-->
+        </div>
+    </div>
+
+    <!--   팝업(2) 글작성 / 한솔님-->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="title">
+                <h2>게시글 작성</h2>
+            </div>
+            <div class="close-area"><a href="#" onclick="close_posting_popup()">X</a></div>
+
+            <div class="content">
+
+                <div class="form-group">
+                    <label for="url"></label>
+                    <input id="url" class="form-control" placeholder="URL"> <!-- url 받아서 이미지 추출 -->
+                </div>
+                <div>
+                    <button type="button" class="preview_btn" onclick="previewArticle()">preview</button>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="description"></label>
+                    <textarea id="description" class="form-control" rows="4" placeholder="comment"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="postArticle()">POST</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+<a id="post-button" href="#" onclick="show_posting_popup()">post</a>
+</body>
+<script src="../static/main.js"></script>
+</html>

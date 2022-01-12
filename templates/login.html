@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+          rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+
+    <link href="../static/css/login.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/login.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+
+        function login_submit() {
+            let id = $('._id').val();
+            let pw = $('._pw').val();
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                data: {id: id, pw: pw},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let access_token = response['access_token'];
+                        $.cookie('access_token', access_token, {path: '/'});
+                        window.location.replace("/mypage")
+                    }
+                    else{
+                        alert(response['msg'])
+                    }
+                }
+            })
+
+        }
+
+
+    </script>
+</head>
+<body class="text-center">
+
+
+<main class="form-signin">
+    <form>
+        <img class="mb-4"
+             src="data:image/jpeg;base64,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"
+             alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">In-Airpods</h1>
+
+        <div class="form-floating">
+            <div class="id">
+                <i class="icon"></i>
+                <input type="text" class="form-control  _id" id="floatingInput">
+            </div>
+        </div>
+
+        <div class="form-floating">
+            <div class="pw">
+                <i class="icon"></i>
+                <input type="password" class="form-control _pw" id="floatingPassword" placeholder="pw">
+
+            </div>
+        </div>
+
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-default login" onclick="login_submit()">로그인</button>
+            <button type="button" class="btn btn-default"  onclick = "location.href = '/' "> 홈 </button>
+            <button type="button" class="btn btn-default register"   onclick = "location.href = '/' ">회원가입</button>
+        </div>
+
+    </form>
+
+
+</main>
+
+
+</body>
+</html>
+
+
