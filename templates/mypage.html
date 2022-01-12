@@ -18,9 +18,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-            <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-        
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
@@ -35,7 +35,14 @@
     <link href="../static/css/mypage.css" rel="stylesheet">
 
     <script>
+         function close_popup() {
+            $('.window').hide()
+            $('.background').hide()
+
+        }
+
         $(document).ready(function () {
+            close_popup()
             $.ajax({
                 type: "GET",
                 url: "/mypage",
@@ -51,29 +58,137 @@
             })
         });
 
-        
-        function logout(){
-            $.removeCookie("access_token",{path:'/' } )
-            window.location.href = '/'   
+
+        function logout() {
+            $.removeCookie("access_token", {path: '/'})
+            window.location.href = '/'
         }
 
 
-        function article_delete() {
+        function article_delete(article_id) {
             $.ajax({
                 type: "GET",
                 url: "/mypage/delete",
-                data: {},
+                data: {'article_id':article_id},
                 success: function (response) {
                     if (response['result'] == 'fail') {
                         alert(response['msg'])
-                        return ;
+                        return;
                     } else {
                         alert(response['msg']);
-
-
+                        window.location.reload();
                     }
                 }
             })
+
+        }
+
+        function show_popup(article_id) {
+            alert(article_id);
+            $('.window').show()
+            $('.background').show()
+            $.ajax({
+                type: "GET",
+                url: "/api/single",
+                data: {"article_id": article_id},
+                success: function (response) {
+                    comments = response['comments']
+                    article = response['article']
+                    console.log(comments, article)
+
+                     $('.window').empty()
+
+                    temp_html = `
+                <button type="button" class="close" onclick=close_popup() aria-label="Close" id="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="album-wrap" style="padding-bottom: 10px">
+                    <div class="album-img">
+                        <div class="media">
+                            <img class="mr-3" src= ${article['album_image']} alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="mt-0" style="padding-top: 10px">${article['album_title']}</h5>
+                                <h6 class="mt-0">${article['album_singer']}</h6>
+
+                                <p><a href="#" onclick="like('${article['article_id']}')" style="cursor: pointer"
+                                        class="card-footer-item has-text-info like-btn">
+                                        <i class="fas fa-heart"></i>
+                                        <span class="like-counts"> ${article['like']}</span>
+                                    </a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="user-comment-div">
+                        <div class="card-body">
+                            ${article['article_description']}
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="card">
+                    <div class="card-body1">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control eee" placeholder="댓글 입력!"
+                                aria-label="Recipient's username" aria-describedby="button-addon2" id="comment">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                    onclick="submit_comment('${article['_id']}')">
+                                    입력
+                                </button>
+                            </div>
+                        </div>
+                        <ul class="list-group">
+
+                            <div id="box">
+                                <li class="media" xmlns="http://www.w3.org/1999/html">
+                                    <img class="mr-31"
+                                        src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDAzMDFfMTY4%2FMDAxNTgzMDYxMTI3Mzcw.dMYeeDAJq6MPBVzEEZkY5fgWsuUPAFdEfoufAmzz5NUg.3G-OzT-ecdZspnCMJVYAa2mnDcyj6-12W-EAefLw1rkg.JPEG.z___s2%2F20200229_225235.jpg&type=a340"
+                                        id="img-size"
+                                        style="max-width: 10%; height: auto; border-radius: 100% 100% 100% 100% ">
+                                    <div class="media-body1" style="margin-left: 20px">
+                                        <p><strong>${comments[0]['user_id']}
+                                                </strong>
+                                                <small>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</small><small>
+                                              ${comments[0]['post_date']}</small>
+                                        </p>
+
+                                        <div >
+                                            <input type="text" id="input-data" style="display: none" value="" size="40">
+                                            <p id="putData" style="display: block">${comments[0]['contents']}
+                                                </p>
+                                            </input>
+                                        </div>
+                                        <a href='javascript:void(0);'
+                                            onclick="get_update_comment(${comments[0]['_id']});"><span
+                                                class="badge badge-primary" style="vertical-align: text-after-edge"
+                                                id="update">수정</span></a>
+                                        <a href='javascript:void(0);'
+                                            onclick="updateComment(${comments[0]['_id']});"><span
+                                                class="badge badge-primary" style="vertical-align: text-after-edge"
+                                                id="updateComplete">수정완료</span></a>
+                                        <a href='javascript:void(0);'
+                                            onclick="deleteComment((${comments[0]['_id']});"><span
+                                                class="badge badge-danger" style="vertical-align: text-after-edge"
+                                                id="delete">삭제</span></a>
+                                    </div>
+
+
+                                </li>
+                            </div>
+
+
+                        </ul>
+                    </div>
+                </div>
+                `
+                    $('.window').append(temp_html);
+
+                }
+            })
+
 
         }
 
@@ -82,22 +197,21 @@
 
 </head>
 <body>
-<div class="wrap">
-    
 
-        <header id="header">
-            <div class="header">
-        
-                <div class="header_menu">
-                    <a href="/" id="myPgBtn" class="myPgBtn">Main</a>
-                    <a onclick="logout()" id="logoutBtn"  class="loginBtn">Logout</a>
-                  
-                </div>
-        
-            </div>
-        </header>
+
+<header id="header">
+    <div class="header">
+
+        <div class="header_menu">
+            <a href="/" id="myPgBtn" class="myPgBtn">Main</a>
+            <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
+
+        </div>
+
     </div>
+</header>
 
+<div class="wrap">
     <div class="profile">
         <table>
             <tr>
@@ -105,12 +219,12 @@
                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvCd6w2KxHY-S8Prx9t1IAC1eGWybJNV0OMw&usqp=CAU">
                 </td>
                 <td>
-                    <span class="badge badge-primary">{{ user_id }}의 공간</span>
+                    <span class="badge">{{ user_id }}님의 공간</span>
                     <!--posting box -->
 
 
                     <!--posting box -->
-                    <div class="card comment">
+                    <div class="comment">
                         <div class="card-body">
                             어허
                         </div>
@@ -125,68 +239,74 @@
     <div class="card-box" id="cards-box">
 
         {% for result in results %}
-        <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top"
-                 src="{{ result['album_image'] }}"
-                 alt="Card image cap">
-            <div class="card-body">
-                <span class="title">{{result['album_title']}}</span>
+            <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top"
+                     src="{{ result['album_image'] }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <span class="title">{{ result['album_title'] }}</span>
 
-                <span class="singer">{{result['album_singer']}}</span>
-                <div class="writer-box">
-                    <img class="writer-img"
-                         src="{{ result['user_img'] }}">
-                    <span class="comment-text">{{result['user_id']}}</span>
-                </div>
-                <div class="description">{{ result['article_description'] }}</div>
-                <div class="date">{{result['post_date']}}</div>
-                <span class="article_id__invisible">{{result['_id']}}</span>
-                <div class="comments-wrap">
-                    <p>댓글</p>
-                    <div class="comment-box comment-box1">
-                        {% if result['comment1'] %}
-                        <img class="commenter-img"
-                             src="{{result['commenter1_img']}}">
-                        {% else %}
-                        <img class="commenter-img"
-                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
-                        {% endif %}
+                    <span class="singer">{{ result['album_singer'] }}</span>
+                    <div class="writer-box">
+                        <img class="writer-img"
+                             src="{{ result['user_img'] }}">
+                        <span class="comment-text">{{ result['user_id'] }}</span>
+                    </div>
+                    <div class="description">{{ result['article_description'] }}</div>
+                    <div class="date">{{ result['post_date'] }}</div>
+                    <span class="article_id__invisible">{{ result['_id'] }}</span>
+                    <div class="comments-wrap">
+                        <p>댓글</p>
+                        <div class="comment-box comment-box1">
+                            {% if result['comment1'] %}
+                                <img class="commenter-img"
+                                     src="{{ result['commenter1_img'] }}">
+                            {% else %}
+                                <img class="commenter-img"
+                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                            {% endif %}
 
-                        <span class="comment-text">{{result['comment1']}}</span>
+                            <span class="comment-text">{{ result['comment1'] }}</span>
+                        </div>
+
+                        <div class="comment-box comment-box2">
+                            {% if result['comment2'] %}
+                                <img class="commenter-img"
+                                     src="{{ result['commenter2_img'] }}">
+                            {% else %}
+                                <img class="commenter-img"
+                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                            {% endif %}
+
+                            <span class="comment-text">{{ result['comment2'] }}</span>
+                        </div>
+                    </div>
+                    <div class="buttons-box">
+                        <a href="#" onclick=show_popup("{{ result['_id'] }}") class="card-footer-item has-text-info">
+                            <i class="fas fa-search-plus"></i>
+                            <span class="like-counts">자세히보기</span>
+                        </a>
+
+                        <a href="#" onclick=article_delete("{{ result['_id'] }}") style="cursor: pointer"
+                           class="card-footer-item has-text-info like-btn">
+                            <i class="fas fa-heart"></i>
+                            <span class="like-counts">삭제하기</span>
+                        </a>
                     </div>
 
-                    <div class="comment-box comment-box2">
-                        {% if result['comment2'] %}
-                        <img class="commenter-img"
-                             src="{{result['commenter2_img']}}">
-                        {% else %}
-                        <img class="commenter-img"
-                             src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
-                        {% endif %}
 
-                        <span class="comment-text">{{result['comment2']}}</span>
-                    </div>
                 </div>
-                <div class="buttons-box">
-                    <a href="#" onclick="" class="card-footer-item has-text-info">
-                        <i class="fas fa-search-plus"></i>
-                        <span class="like-counts">자세히보기</span>
-                    </a>
-
-                    <a href="#" onclick="article_delete()" style="cursor: pointer"
-                       class="card-footer-item has-text-info like-btn">
-                        <i class="fas fa-heart"></i>
-                        <span class="like-counts">삭제하기</span>
-                    </a>
-                </div>
-
-
             </div>
-        </div>
         {% endfor %}
         <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
 
+    </div>
+
+<div id="background" class="background">
+        <div class="window">
+
+        </div>
     </div>
 
 </div>

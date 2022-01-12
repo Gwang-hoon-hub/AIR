@@ -169,7 +169,11 @@ def mypage():
 # 만약 권한이 있다면 render_template("mypage");
 # 없다면 redirect("/login");
 
-
+@app.route('/mypage/delete')
+def delete():
+    article_id = request.args.get('article_id')
+    db.articles.delete_one({'_id':article_id})
+    return jsonify({'msg':'삭제완료!'})
 ###############################################################################
 
 

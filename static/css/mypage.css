@@ -3,7 +3,11 @@ html,
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-
+/*전체 wrap*/
+.wrap {
+    width: 1000px;
+    margin: auto;
+}
 
 .welcome {
     text-align: center;
@@ -216,4 +220,64 @@ body {
 
 .header .header_menu a:hover {
     color: rgb(255, 255, 255);
+}
+
+/* 광훈님 주신 css */
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.window {
+    background: rgba(255, 255, 255, 2);
+    box-shadow: 0 8px 32px 0 rgba(51, 51, 51, 0.5);
+    backdrop-filter: blur(13.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    width: 700px;
+    height: 900px;
+    position: fixed;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.album-img {
+    margin: 20px 20px 20px 20px;
+}
+
+.mr-3 {
+    max-width: 50%;
+    height: auto;
+    vertical-align: middle;
+}
+
+.media-body {
+    max-width: 50%;
+    height: auto;
+}
+
+.media {
+    padding: 20px 10px 20px 10px;
+}
+
+.card {
+    width: 100%;
 }
