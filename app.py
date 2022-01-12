@@ -1,13 +1,12 @@
-from routes import home_route, single_route, post_route
+import single_route
+import home_route
 from pymongo import MongoClient
 from flask_bcrypt import Bcrypt
 import jwt
-import uuid
 from datetime import datetime, timedelta
 
 import pymongo
 from flask import Flask, render_template, request, redirect, jsonify, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -31,7 +30,7 @@ db = client.mini
 
 app.register_blueprint(home_route.bp)
 app.register_blueprint(single_route.bp)
-app.register_blueprint(post_route.bp)
+# app.register_blueprint(post_route.bp)
 
 # 이 조건을 달지 않으면, css같은 사항 변화를 12시간마다 체크한다. 즉 디버깅모드에서는 불편하므로, 디버깅시에는 1초로 변경하는 것.
 if app.config['DEBUG']:
@@ -217,6 +216,87 @@ def make_doc(articles, comments):
 
 
 ##########################################################################
+# 한솔님 크롤링
+from selenium import webdriver
+# from webdriver_manager.chrome import ChromeDriverManager
+# driver = webdriver.Chrome(ChromeDriverManager().install())
+import time
+
+options = webdriver.ChromeOptions()
+options.add_argument("headless") # 화면 띄우기 없음
+
+
+@app.route('/api/post/preview', methods=['POST'])
+def preview():
+    url_receive = request.form['url_give']
+    driver = webdriver.Chrome('./chromedriver')
+    driver.implicitly_wait(1)
+    url = url_receive
+    driver.get(url)
+    time.sleep(3)
+
+    temp_title = ''
+    temp_singer = ''
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.title'):
+        title = (i.text)
+        temp_title = title
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.sub_title > span:nth-child(2) > span > a > span'):
+        singer = (i.text)
+        temp_singer = singer
+
+    temp_img = driver.find_element_by_css_selector("#content > div.summary_section > div.summary_thumb > img").get_attribute(
+        'src')
+
+    return jsonify({'img': temp_img, 'title':temp_title, 'singer':temp_singer})
+
+@app.route('/api/post/post_article', methods=['POST'])
+def post_article():
+    url_receive = request.form['url_give']
+    desc_receive = request.form['desc_give']
+    #user_id_receive = request.form['user_id_give']
+
+
+    driver = webdriver.Chrome('./chromedriver')
+    driver.implicitly_wait(1)
+    url = url_receive
+    driver.get(url)
+    time.sleep(3)
+
+    temp_title = ''
+    temp_singer = ''
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.title'):
+        title = (i.text)
+        temp_title = title
+
+    for i in driver.find_elements_by_css_selector(
+            '#content > div.summary_section > div.summary > div.text_area > h2 > span.sub_title > span:nth-child(2) > span > a > span'):
+        singer = (i.text)
+        temp_singer = singer
+
+    temp_img = driver.find_element_by_css_selector(
+        "#content > div.summary_section > div.summary_thumb > img").get_attribute(
+        'src')
+
+    doc = {
+        'url' : url_receive,
+        'description' : desc_receive,
+        'img' : temp_img,
+        'title':temp_title,
+        'singer':temp_singer
+        #'user_id' : user_id_receive
+    }
+
+    db.Article.insert_one(doc)
+
+    return jsonify({'msg':'포스팅 완료'})
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5008, debug=True)
