@@ -194,21 +194,35 @@ a {
 }
 
 #post-button {
-  background-color: rgb(157, 159, 222);
-  width: 40px;
-  height: 40px;
+  background-color: #5a2ff4;
+  width: 80px;
+  height: 80px;
+    padding-top: 22px;
   text-align: center;
-
-  border-radius: 20px;
+  border-radius: 40px;
   position: fixed;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.82);
   bottom: 30px;
   right: 30px;
+    font-size: 20px;
+    padding-right: 5px;
+    font-weight: bolder;
   /*transition-property: background-color, opacity, visibility;*/
   /*transition-duration: 0.3s, 0.5s, 0.5s;*/
   /*opacity: 0;*/
   /*visibility: hidden;*/
   /*z-index: 999;*/
+ box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 }
+
+#post-button:hover {
+    transform: translate(0, -5px);
+    background-color: #afbff7;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    transition-duration: 0.6s;
+}
+
 
 
 /* 광훈님 주신 css */
