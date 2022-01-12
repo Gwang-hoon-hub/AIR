@@ -82,7 +82,8 @@
                 data: {},
                 success: function (response) {
                     if (response['result'] !== 'success') {
-                        alert("좋아요를 하시려면 로그인을 해주세요")
+                        alert("좋아요를 하시려면 로그인을 해주세요");
+                        ifLoggedIn()
                     } else {
                         $.ajax({
                             type: 'POST',
@@ -177,7 +178,7 @@
                                                         <span class="like-counts">${like}</span>
                                                     </a>
 
-                                                    <a href=# onclick="" class="card-footer-item has-text-info show">
+                                                    <a href=# onclick="show_popup('${article_id}')" class="card-footer-item has-text-info show">
                                                         <i class="fas fa-search-plus"></i>
                                                         <span class="like-counts">자세히보기</span>
                                                     </a>
@@ -206,9 +207,13 @@
 
         }
 
-        function show_popup() {
+        // todo 클릭한 아티클의 데이터도 팝업 뷰에 전달해야 함
+        function show_popup(article_id) {
             $('.window').show()
             $('.background').show()
+
+
+
         }
 
         // 포스팅 팝업창 닫기/열기
@@ -312,6 +317,7 @@
         <div class="header_menu">
             <a href="/mypage" id="myPgBtn" class="myPgBtn">My Page</a>
             <a href="/login" id="loginBtn" class="loginBtn">Login</a>
+{#            todo logout 구현 #}
             <a href="/logout" id="logoutBtn" class="loginBtn">Logout</a>
 
         </div>
@@ -383,7 +389,7 @@
                             <span class="like-counts">{{ result['like'] }}</span>
                         </a>
 
-                        <a href="#" onclick="show_popup()" class="card-footer-item has-text-info show">
+                        <a href="#" onclick="show_popup({{ result['_id'] }})" class="card-footer-item has-text-info show">
                             <i class="fas fa-search-plus"></i>
                             <span class="like-counts">자세히보기</span>
                         </a>

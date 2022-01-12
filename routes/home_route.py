@@ -87,3 +87,5 @@ def like():
     db.users.update_one({'user_id':user_id}, {'$set': {'liked_articles': liked_articles}})
 
     return jsonify({'message': '좋아요 완료!'})
+
+# 단일 아티클 팝업창에 데이터 담기
