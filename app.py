@@ -232,8 +232,8 @@ def register():
              "_id" : uuid.uuid4().hex,
              "user_id":input_id,
              "pwd":hashpw,
-             'user_img':None,
-             'introduce':None,
+             'user_img':"none",
+             'introduce':"none",
          }
 
          db.users.insert_one(user);
@@ -356,7 +356,7 @@ def post_article():
     access_token = request.cookies.get('access_token')
     user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
     user_id = user_info['user_id']
-    user_nick = db.users.find_one({'user_id':user_id}, {'user_nick':1})['user_nick']
+
 
     # 날짜 가져오기
     time_now = datetime.now()
