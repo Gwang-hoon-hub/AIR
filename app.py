@@ -23,8 +23,8 @@ bcrypt = Bcrypt(app)
 
 
 # TODO EC2랑 연결된 mongoDb로 변경
-client = MongoClient('localhost', 27017)
-# client = MongoClient('mongodb://test:test@localhost', 27017)
+# client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@52.79.250.33', 27017)
 
 db = client.mini
 
@@ -225,6 +225,7 @@ def register():
          hashpw=bcrypt.generate_password_hash(input_pw);
     
          user = {
+             "_id": uuid.uuid4().hex,
              "user_id":input_id,
              "input_pw":hashpw
          }
