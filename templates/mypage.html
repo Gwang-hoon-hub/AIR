@@ -66,39 +66,63 @@
 
 
         function article_delete(article_id) {
-            $.ajax({
-                type: "GET",
-                url: "/mypage/delete",
-                data: {'article_id': article_id},
-                success: function (response) {
-                    if (response['result'] == 'fail') {
-                        alert(response['msg'])
-                        return;
-                    } else {
-                        alert(response['msg']);
-                        window.location.reload();
+
+            if (confirm("정말 삭제하시겠습니까 ?") == true) {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/mypage/delete",
+                    data: {'article_id': article_id},
+                    success: function (response) {
+                        if (response['result'] == 'fail') {
+                            alert(response['msg'])
+                            return;
+                        } else {
+                            alert(response['msg']);
+                            window.location.reload();
+                        }
                     }
-                }
-            })
+                })
 
-        }
 
-        function show_popup(article_id) {
+            } else {
+                return;
+            }
 
-            $('.window').show()
-            $('.background').show()
-            $.ajax({
-                type: "GET",
-                url: "/api/single",
-                data: {"article_id": article_id},
-                success: function (response) {
-                    comments = response['comments']
-                    article = response['article']
-                    console.log(comments, article)
 
-                    $('.window').empty()
+            {#$.ajax({#}
+            {#    type: "GET",#}
+            {#    url: "/mypage/delete",#}
+            {#    data: {'article_id': article_id},#}
+            {#    success: function (response) {#}
+            {#        if (response['result'] == 'fail') {#}
+            {#            alert(response['msg'])#}
+            {#            return;#}
+            {#        } else {#}
+            {#            alert(response['msg']);#}
+            {#            window.location.reload();#}
+            {#        }#}
+            {#    }#}
+            {#})#}
 
-                    temp_html = `
+            }
+
+            function show_popup(article_id) {
+
+                $('.window').show()
+                $('.background').show()
+                $.ajax({
+                    type: "GET",
+                    url: "/api/single",
+                    data: {"article_id": article_id},
+                    success: function (response) {
+                        comments = response['comments']
+                        article = response['article']
+                        console.log(comments, article)
+
+                        $('.window').empty()
+
+                        temp_html = `
                 <button type="button" class="close" onclick=close_popup() aria-label="Close" id="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -184,13 +208,13 @@
                     </div>
                 </div>
                 `
-                    $('.window').append(temp_html);
+                        $('.window').append(temp_html);
 
-                }
-            })
+                    }
+                })
 
 
-        }
+            }
 
 
     </script>
@@ -259,7 +283,7 @@
 
                     <span class="singer">{{ result['album_singer'] }}</span>
                     <div class="writer-box">
-                                        {% if user_img != "none" %}
+                        {% if user_img != "none" %}
 
                             <img class="writer-img" src="{{ user_img }}">
                         {% else %}
@@ -290,7 +314,7 @@
                         </div>
 
                         <div class="comment-box comment-box2">
-                           {% if result['comment2'] %}
+                            {% if result['comment2'] %}
                                 {% if result['commenter2_img'] != "none" %}
                                     <img class="commenter-img" src="{{ result['commenter2_img'] }}">
                                 {% else %}
