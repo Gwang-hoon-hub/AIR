@@ -33,7 +33,7 @@
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <!--   JS 광훈 -->
-    <script type="text/javascript" >
+    <script type="text/javascript">
 
         function get_id() {
             $.ajax({
@@ -46,6 +46,7 @@
                 }
             })
         }
+
         //댓글 보여주기 항상 reload
 
         // 수정 버튼 클릭 시 해당 글 갖고와 textarea에 넣고 수정가능하게 만들기 (html수정하기)
@@ -73,7 +74,7 @@
             let today = new Date().toISOString();
             //get_id로 유저의 id를 받아옴
             let name = get_id();
-            alert(name)
+
 
             $.ajax({
                 type: "POST",
@@ -81,8 +82,8 @@
                 data: {
                     'comment_give': comment,
                     'date_give': today,
-                    'article_id':article_id,
-                    'user_id':name
+                    'article_id': article_id,
+                    'user_id': name
                 },
                 success: function (response) {
                     if (response["result"] == "success") {
@@ -214,7 +215,8 @@
 
         function comment() {
             console.log("여기까지는 나오는가")
-            let comment = document.getElementById('comment').value; 4
+            let comment = document.getElementById('comment').value;
+            4
             console.log(comment)
             let userID = document.getElementById('userID').value;
             let today = new Date().toISOString();
@@ -223,7 +225,7 @@
 
             console.log(comment);
             console.log(today);
-            alert(today, comment);
+
             $.ajax({
                 type: "POST",
                 url: "/api/single/post_comment",
@@ -346,7 +348,7 @@
 
 
         function show_popup(article_id) {
-            alert(article_id);
+
             $('.window').show()
             $('.background').show()
             $.ajax({
@@ -358,7 +360,7 @@
                     article = response['article']
                     console.log(comments, article)
 
-                     $('.window').empty()
+                    $('.window').empty()
 
                     temp_html = `
                 <button type="button" class="close" onclick="close_popup()" aria-label="Close" id="close">
@@ -575,7 +577,12 @@
 
                     <span class="singer">{{ result['album_singer'] }}</span>
                     <div class="writer-box">
-                        <img class="writer-img" src="{{ result['writer_img'] }}">
+                        {% if result['writer_img'] != "none" %}
+                            <img class="writer-img" src="{{ result['writer_img'] }}">
+                        {% else %}
+                            <img class="writer-img"
+                                 src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                        {% endif %}
                         <span class="comment-text">{{ result['writer_name'] }}</span>
                     </div>
                     <div class="description">{{ result['article_description'] }}</div>
@@ -585,7 +592,12 @@
                         <p>댓글</p>
                         <div class="comment-box comment-box1">
                             {% if result['comment1'] %}
-                                <img class="commenter-img" src="{{ result['commenter1_img'] }}">
+                                {% if result['commenter1_img'] != "none" %}
+                                    <img class="commenter-img" src="{{ result['commenter1_img'] }}">
+                                {% else %}
+                                    <img class="commenter-img"
+                                         src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                                {% endif %}
                             {% else %}
                                 <img class="commenter-img"
                                      src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
@@ -595,8 +607,13 @@
                         </div>
 
                         <div class="comment-box comment-box2">
-                            {% if result['comment2'] %}
-                                <img class="commenter-img" src="{{ result['commenter2_img'] }}">
+                           {% if result['comment2'] %}
+                                {% if result['commenter2_img'] != "none" %}
+                                    <img class="commenter-img" src="{{ result['commenter2_img'] }}">
+                                {% else %}
+                                    <img class="commenter-img"
+                                         src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                                {% endif %}
                             {% else %}
                                 <img class="commenter-img"
                                      src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">

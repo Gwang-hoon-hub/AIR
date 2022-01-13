@@ -57,7 +57,7 @@ def home():
 
         comments = list(db.comments.find({'article_id': id}, {'contents': 1, 'user_id': 1}).sort(
             'post_date', pymongo.DESCENDING))
-        print(comments)
+
         if len(comments) != 0:
             comment1 = comments[0]['contents']
             commenter1_id = comments[0]['user_id']
@@ -78,7 +78,7 @@ def home():
 
         article['comment1'] = comment1
         article['comment2'] = comment2
-        print(comment1, comment2)
+
         modified_all_articles.append(article)
 
     return render_template('index.html', results=modified_all_articles)
@@ -102,7 +102,7 @@ def login():
         if user is None:
             return jsonify({'result': 'fail', 'msg': '우리 회원이 아니다'})
         pw_hash = user['pwd']
-        print(bcrypt.check_password_hash(pw_hash, pw))
+        # print(bcrypt.check_password_hash(pw_hash, pw))
 
         # 어떻게 게속 같은 결과를 리턴해줘 ? 내부 알고리즘 찾아보기 1234 리턴값 bool
         if bcrypt.check_password_hash(pw_hash, pw) is False:
@@ -115,7 +115,7 @@ def login():
             }
             access_token = jwt.encode(payload, SECRET_KEY)  # Default: "HS256"
 
-            print(access_token)
+            # print(access_token)
             return jsonify({"result": "success", "access_token": access_token})
 
     else:
@@ -134,7 +134,7 @@ def login():
 def get_id():
     access_token = request.cookies.get('access_token')
 
-    print(f"get_id에서 토큰확인 {request.cookies.get('access_token')}")
+    # print(f"get_id에서 토큰확인 {request.cookies.get('access_token')}")
     try:
         user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
         print(user_info)
@@ -182,13 +182,13 @@ def delete():
 def check_token(access_token):
     try:
         user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
-        print(user_info)
         articles = get_data(user_info['user_id'])
 
         user_img = db.users.find_one({'user_id':user_info['user_id']},{'user_img':1})['user_img']
-        print(f"### 마이페이지 유저 이미지는? ###{user_img}")
+        user_introduce = db.users.find_one({'user_id':user_info['user_id']},{'introduce':1})['introduce']
 
-        return render_template("mypage.html", results=articles, user_id=user_info['user_id'], user_img=user_img)
+
+        return render_template("mypage.html", results=articles, user_id=user_info['user_id'], user_img=user_img, user_introduce=user_introduce)
 
     except jwt.ExpiredSignatureError:
         print('로그인만료')
@@ -287,7 +287,7 @@ def post_article():
 
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
-    print(options);
+
 
     driver = webdriver.Chrome('./chromedriver', options=options)
     driver.implicitly_wait(1)
@@ -373,7 +373,7 @@ def single():
 def post_comment():
     comment_receive = request.form['comment_give']
     today_receive = request.form['date_give']
-    print(comment_receive,today_receive)
+
     # userid_receive = request.form['user_id']
     # 현재 로그인한 사용자의 아이디 가져오기
     # SECRET_KEY = '123'
@@ -437,6 +437,7 @@ def delete_comment():
     db.prac12.delete_one({'userID': userID_receive})
 
     return jsonify({'result': 'success','msg': '삭제완료!'})
+
 
 
 
