@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>마이페이지 | InAirpod</title>
@@ -7,114 +8,95 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
-          rel="stylesheet">
+        rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
     <!— font —>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
-          rel="stylesheet">
-    <link href="../static/css/mypage.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Noto+Sans+KR:wght@300&display=swap"
+            rel="stylesheet">
+        <link href="../static/css/mypage.css" rel="stylesheet">
 
-       <!-- 일반적인 favicon 설정 -->
-    <link rel="icon" href="../static/img/favicon.ico" />
-    <!-- 아이폰용 favicon 설정 -->
-    <link rel="apple-touch-icon" href="../static/img/favicon.ico" />
-    <!-- 인터넷 익스플로러용 favicon 설정 -->
-    <link
-      rel="short icon"
-      type="image/x-icon"
-      href="../static/img/favicon.ico"
-    />
+        <!-- 일반적인 favicon 설정 -->
+        <link rel="icon" href="../static/img/favicon.ico" />
+        <!-- 아이폰용 favicon 설정 -->
+        <link rel="apple-touch-icon" href="../static/img/favicon.ico" />
+        <!-- 인터넷 익스플로러용 favicon 설정 -->
+        <link rel="short icon" type="image/x-icon" href="../static/img/favicon.ico" />
 
-    <script>
-        function close_popup() {
-            $('.window').hide()
-            $('.background').hide()
+        <script>
+            function close_popup() {
+                $('.window').hide()
+                $('.background').hide()
 
-        }
+            }
 
-        $(document).ready(function () {
-            close_popup()
-            $.ajax({
-                type: "GET",
-                url: "/mypage",
-                data: {},
-                success: function (response) {
-                    if (response['result'] == 'fail') {
-                        alert(response['msg'])
-                        window.location.replace('/login')
-                    } else {
-
-                    }
-                }
-            })
-        });
-
-
-        function logout() {
-            $.removeCookie("access_token", {path: '/'})
-            window.location.href = '/'
-        }
-
-
-        function article_delete(article_id) {
-
-            if (confirm("정말 삭제하시겠습니까 ?") == true) {
-
+            $(document).ready(function () {
+                close_popup()
                 $.ajax({
                     type: "GET",
-                    url: "/mypage/delete",
-                    data: {'article_id': article_id},
+                    url: "/mypage",
+                    data: {},
                     success: function (response) {
                         if (response['result'] == 'fail') {
                             alert(response['msg'])
-                            return;
+                            window.location.replace('/login')
                         } else {
-                            alert(response['msg']);
-                            window.location.reload();
+
                         }
                     }
                 })
+            });
 
 
-            } else {
-                return;
+            function logout() {
+                $.removeCookie("access_token", { path: '/' })
+                window.location.href = '/'
             }
 
 
-            {#$.ajax({#}
-            {#    type: "GET",#}
-            {#    url: "/mypage/delete",#}
-            {#    data: {'article_id': article_id},#}
-            {#    success: function (response) {#}
-            {#        if (response['result'] == 'fail') {#}
-            {#            alert(response['msg'])#}
-            {#            return;#}
-            {#        } else {#}
-            {#            alert(response['msg']);#}
-            {#            window.location.reload();#}
-            {#        }#}
-            {#    }#}
-            {#})#}
+            function article_delete(article_id) {
+
+                if (confirm("정말 삭제하시겠습니까 ?") == true) {
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/mypage/delete",
+                        data: { 'article_id': article_id },
+                        success: function (response) {
+                            if (response['result'] == 'fail') {
+                                alert(response['msg'])
+                                return;
+                            } else {
+                                alert(response['msg']);
+                                window.location.reload();
+                            }
+                        }
+                    })
+
+
+                } else {
+                    return;
+                }
+
 
             }
 
@@ -125,7 +107,7 @@
                 $.ajax({
                     type: "GET",
                     url: "/api/single",
-                    data: {"article_id": article_id},
+                    data: { "article_id": article_id },
                     success: function (response) {
                         comments = response['comments']
                         article = response['article']
@@ -228,67 +210,65 @@
             }
 
 
-    </script>
+        </script>
 
 </head>
+
 <body>
 
 
-<header id="header">
-    <div class="header">
+    <header id="header">
+        <div class="header">
 
-        <div class="header_menu">
-            <a href="/" id="myPgBtn" class="myPgBtn">Main</a>
-            <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
+            <div class="header_menu">
+                <a href="/" id="myPgBtn" class="myPgBtn">Main</a>
+                <a onclick="logout()" id="logoutBtn" class="loginBtn">Logout</a>
+
+            </div>
 
         </div>
+    </header>
 
-    </div>
-</header>
-
-<div class="wrap">
-    <div class="profile">
-        <table>
-            <tr>
-                {% if user_img != "none" %}
-                    <td><img class="profile-picture" ,algin="left"
-                             src="{{ user_img }}">
+    <div class="wrap">
+        <div class="profile">
+            <table>
+                <tr>
+                    {% if user_img != "none" %}
+                    <td><img class="profile-picture" ,algin="left" src="{{ user_img }}">
                     </td>
-                {% else %}
+                    {% else %}
                     <td><img class="profile-picture" ,algin="left"
-                             src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                            src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
                     </td>
-                {% endif %}
-                <td>
-                    <span class="badge">{{ user_id }}님의 공간</span>
-                    <!--posting box -->
+                    {% endif %}
+                    <td>
+                        <span class="badge">{{ user_id }}님의 공간</span>
+                        <!--posting box -->
 
 
-                    <!--posting box -->
-                    <div class="comment">
-                        <div class="card-body">
-                            {% if user_introduce != "none" %}
+                        <!--posting box -->
+                        <div class="comment">
+                            <div class="card-body">
+                                {% if user_introduce != "none" %}
                                 {{ user_introduce }}
-                            {% else %}
+                                {% else %}
                                 소개글을 등록해주세요 :)
-                            {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
 
-    <!-- 이하 44라인정도 하나의 카드-->
-    <div class="card-box" id="cards-box">
+        <!-- 이하 44라인정도 하나의 카드-->
+        <div class="card-box" id="cards-box">
 
-        {% for result in results %}
+            {% for result in results %}
             <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top"
-                     src="{{ result['album_image'] }}"
-                     alt="Card image cap">
+                <img class="card-img-top" src="{{ result['album_image'] }}" alt="Card image cap">
                 <div class="card-body">
                     <span class="title">{{ result['album_title'] }}</span>
 
@@ -296,10 +276,10 @@
                     <div class="writer-box">
                         {% if user_img != "none" %}
 
-                            <img class="writer-img" src="{{ user_img }}">
+                        <img class="writer-img" src="{{ user_img }}">
                         {% else %}
-                            <img class="writer-img"
-                                 src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                        <img class="writer-img"
+                            src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
                         {% endif %}
                         <span class="comment-text">{{ result['user_id'] }}</span>
                     </div>
@@ -310,15 +290,15 @@
                         <p>댓글</p>
                         <div class="comment-box comment-box1">
                             {% if result['comment1'] %}
-                                {% if result['commenter1_img'] != "none" %}
-                                    <img class="commenter-img" src="{{ result['commenter1_img'] }}">
-                                {% else %}
-                                    <img class="commenter-img"
-                                         src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
-                                {% endif %}
+                            {% if result['commenter1_img'] != "none" %}
+                            <img class="commenter-img" src="{{ result['commenter1_img'] }}">
                             {% else %}
-                                <img class="commenter-img"
-                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                            <img class="commenter-img"
+                                src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                            {% endif %}
+                            {% else %}
+                            <img class="commenter-img"
+                                src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
                             {% endif %}
 
                             <span class="comment-text">{{ result['comment1'] }}</span>
@@ -326,15 +306,15 @@
 
                         <div class="comment-box comment-box2">
                             {% if result['comment2'] %}
-                                {% if result['commenter2_img'] != "none" %}
-                                    <img class="commenter-img" src="{{ result['commenter2_img'] }}">
-                                {% else %}
-                                    <img class="commenter-img"
-                                         src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
-                                {% endif %}
+                            {% if result['commenter2_img'] != "none" %}
+                            <img class="commenter-img" src="{{ result['commenter2_img'] }}">
                             {% else %}
-                                <img class="commenter-img"
-                                     src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
+                            <img class="commenter-img"
+                                src="https://cdn.pixabay.com/photo/2017/01/11/10/25/headsets-1971383__480.jpg">
+                            {% endif %}
+                            {% else %}
+                            <img class="commenter-img"
+                                src="https://mblogthumb-phinf.pstatic.net/MjAxNzEyMThfMjQ1/MDAxNTEzNjA3MTcwNTg4.f9D3x971p8iDr_ox3nOQZmp2bHHA3YEtAvWI6-Zq6aAg.1E7HSp02TKDPZwC1wdciQdKiMEEzo0TvuY0ts5OmK4Mg.PNG.ooza-/IMG_9198.PNG?type=w800">
                             {% endif %}
 
 
@@ -348,7 +328,7 @@
                         </a>
 
                         <a href="#" onclick=article_delete("{{ result['_id'] }}") style="cursor: pointer"
-                           class="card-footer-item has-text-info like-btn">
+                            class="card-footer-item has-text-info like-btn">
                             <i class="fas fa-heart"></i>
                             <span class="like-counts">삭제하기</span>
                         </a>
@@ -357,17 +337,18 @@
 
                 </div>
             </div>
-        {% endfor %}
-        <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
-
-    </div>
-
-    <div id="background" class="background">
-        <div class="window">
+            {% endfor %}
+            <!-- 수정중-------------------------------------------------------------------------------------------------------------------->
 
         </div>
-    </div>
 
-</div>
+        <div id="background" class="background">
+            <div class="window">
+
+            </div>
+        </div>
+
+    </div>
 </body>
+
 </html>
