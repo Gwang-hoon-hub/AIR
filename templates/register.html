@@ -141,7 +141,7 @@
                         $.ajax({
                             type: "POST",
                             url: "/register",
-                            data: { user_id: id, pwd: pw1,user_img:null ,introduce:null },
+                            data: { user_id: id, pwd: pw1,user_img: null,introduce:null },
                             success: function (response) {
                                 if (response['result'] == 'success') {
                                     alert("회원가입 성공");

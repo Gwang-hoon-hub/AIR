@@ -232,10 +232,10 @@ def register():
              "_id" : uuid.uuid4().hex,
              "user_id":input_id,
              "pwd":hashpw,
-             'user_img':user_img,
-             'introduce':introduce,
+             'user_img':None,
+             'introduce':None,
          }
-         
+
          db.users.insert_one(user);
          return jsonify({'result':'success'})
          
@@ -477,8 +477,6 @@ def delete_comment():
     db.prac12.delete_one({'userID': userID_receive})
 
     return jsonify({'result': 'success','msg': '삭제완료!'})
-
-
 
 
 
