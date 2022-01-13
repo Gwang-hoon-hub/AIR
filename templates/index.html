@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>메인 페이지</title>
+    <title>InAirpod</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -23,6 +23,17 @@
 
     <!-- App CSS -->
     <link rel="stylesheet" href="../static/css/style.css" type="text/css">
+
+      <!-- 일반적인 favicon 설정 -->
+    <link rel="icon" href="../static/img/favicon.ico" />
+    <!-- 아이폰용 favicon 설정 -->
+    <link rel="apple-touch-icon" href="../static/img/favicon.ico" />
+    <!-- 인터넷 익스플로러용 favicon 설정 -->
+    <link
+      rel="short icon"
+      type="image/x-icon"
+      href="../static/img/favicon.ico"
+    />
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -562,7 +573,7 @@
     </div>
 
     <div class="wrap-box_search">
-        <input type="text" id="input_search" class="input_search" placeholder="검색어를 입력해주세요">
+        <input type="text" id="input_search" class="input_search" placeholder="곡명 또는 가수명을 입력해주세요">
         <button type="button" class="btn btn-search" onclick="keyword_search()">검색</button>
     </div>
 
