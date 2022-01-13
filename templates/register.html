@@ -132,9 +132,8 @@
             let id = $('.ID').val();
             let pw1 = $('#password_1').val()
             let pw2 = $('#password_2').val()
+        
           
-
-            
             if (regExp.test(id)) {
                 if (pw1 == pw2) {
                     if (check_pw(pw1)) {
@@ -142,7 +141,7 @@
                         $.ajax({
                             type: "POST",
                             url: "/register",
-                            data: { user_id: id, pwd: pw1, },
+                            data: { user_id: id, pwd: pw1,user_img:null ,introduce:null },
                             success: function (response) {
                                 if (response['result'] == 'success') {
                                     alert("회원가입 성공");
@@ -199,14 +198,13 @@
             <input type="text" id="ID" class="ID" placeholder="ID">
 
         </div>
-        
-
+     
 
         <div class="content_content">
             <input type="password" id="password_1" class="pw" placeholder="PW">
-
         </div>
 
+       
         <div class="content_content">
             <input type="password" id="password_2" class="pw" placeholder="PW"><br>
             <span id="alert-success" style="display: none; color:rgb(2, 160, 68); font-weight: bold;">비밀번호가

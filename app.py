@@ -23,8 +23,9 @@ bcrypt = Bcrypt(app)
 
 
 # TODO EC2랑 연결된 mongoDb로 변경
-# client = MongoClient('localhost', 27017)
-client = MongoClient('mongodb://test:test@52.79.250.33', 27017)
+client = MongoClient('localhost', 27017)
+# client = MongoClient('mongodb://test:test@localhost', 27017)
+
 
 db = client.mini
 
@@ -223,12 +224,18 @@ def register():
 
          input_pw= request.form['pwd']
          hashpw=bcrypt.generate_password_hash(input_pw);
+
+         user_img= request.form['user_img']
+         introduce = request.form['introduce']
     
          user = {
-             "_id": uuid.uuid4().hex,
+             "_id" : uuid.uuid4().hex,
              "user_id":input_id,
-             "input_pw":hashpw
+             "pwd":hashpw,
+             'user_img':user_img,
+             'introduce':introduce,
          }
+         
          db.users.insert_one(user);
          return jsonify({'result':'success'})
          
