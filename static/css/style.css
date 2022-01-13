@@ -194,26 +194,26 @@ a {
 }
 
 #post-button {
-  background-color: #5a2ff4;
-  width: 80px;
-  height: 80px;
+    background-color: #5a2ff4;
+    width: 80px;
+    height: 80px;
     padding-top: 22px;
-  text-align: center;
-  border-radius: 40px;
-  position: fixed;
+    text-align: center;
+    border-radius: 40px;
+    position: fixed;
     font-style: italic;
     color: rgba(255, 255, 255, 0.82);
-  bottom: 30px;
-  right: 30px;
+    bottom: 30px;
+    right: 30px;
     font-size: 20px;
     padding-right: 5px;
     font-weight: bolder;
-  /*transition-property: background-color, opacity, visibility;*/
-  /*transition-duration: 0.3s, 0.5s, 0.5s;*/
-  /*opacity: 0;*/
-  /*visibility: hidden;*/
-  /*z-index: 999;*/
- box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    /*transition-property: background-color, opacity, visibility;*/
+    /*transition-duration: 0.3s, 0.5s, 0.5s;*/
+    /*opacity: 0;*/
+    /*visibility: hidden;*/
+    /*z-index: 999;*/
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 #post-button:hover {
@@ -222,6 +222,27 @@ a {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
     transition-duration: 0.6s;
 }
+
+
+.svg-inline--fa {
+    color: #9d9fde;
+    width: 30px;
+}
+
+.svg-inline--fa:hover {
+    color: #5a2ff4;
+
+}
+
+.card a span {
+    color: #9d9fde;
+}
+
+
+.card a span:hover {
+    color: #5a2ff4;
+}
+
 
 /* 광훈님 주신 css */
 * {
@@ -374,7 +395,7 @@ a {
 
 }
 
-.card-columns{
+.card-columns {
     position: relative;
     left: 150px;
 }
