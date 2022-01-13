@@ -23,7 +23,11 @@ bcrypt = Bcrypt(app)
 
 
 # TODO EC2랑 연결된 mongoDb로 변경
+# 한솔님 주소
 client = MongoClient('mongodb://test:test@52.79.250.33', 27017)
+
+# 정현 주소
+# client = MongoClient('mongodb://test:test@54.180.139.112', 27017)
 
 
 db = client.mini
@@ -292,7 +296,10 @@ def preview():
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
 
-    driver = webdriver.Chrome('./chromedriver', options=options)
+    # driver = webdriver.Chrome('./chromedriver', options=options)
+    driver = webdriver.Chrome('/home/ubuntu/week1mini/chromedriver', options=options)
+
+
     driver.implicitly_wait(1)
     url = url_receive
     driver.get(url)
@@ -480,4 +487,4 @@ def delete_comment():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5008, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
