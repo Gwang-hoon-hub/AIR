@@ -185,7 +185,10 @@ def check_token(access_token):
         print(user_info)
         articles = get_data(user_info['user_id'])
 
-        return render_template("mypage.html", results=articles, user_id=user_info['user_id'])
+        user_img = db.users.find_one({'user_id':user_info['user_id']},{'user_img':1})['user_img']
+        print(f"### 마이페이지 유저 이미지는? ###{user_img}")
+
+        return render_template("mypage.html", results=articles, user_id=user_info['user_id'], user_img=user_img)
 
     except jwt.ExpiredSignatureError:
         print('로그인만료')
