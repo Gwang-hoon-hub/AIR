@@ -317,6 +317,7 @@ def post_article():
     access_token = request.cookies.get('access_token')
     user_info = jwt.decode(access_token, SECRET_KEY, "HS256")
     user_id = user_info['user_id']
+    user_nick = db.users.find_one({'user_id':user_id}, {'user_nick':1})['user_nick']
 
     # 날짜 가져오기
     time_now = datetime.now()
@@ -328,7 +329,7 @@ def post_article():
     doc = {
         "_id": uuid.uuid4().hex,
         "user_id": user_id,
-        "writer_name":"임시이름~",
+        # "writer_name": user_nick,
         'article_url' : url_receive,
         'article_description' : desc_receive,
         'album_image' : temp_img,
