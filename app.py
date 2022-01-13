@@ -26,6 +26,7 @@ bcrypt = Bcrypt(app)
 client = MongoClient('localhost', 27017)
 # client = MongoClient('mongodb://test:test@localhost', 27017)
 
+
 db = client.mini
 
 # 다른 API 경로들 파일 연결
@@ -223,11 +224,18 @@ def register():
 
          input_pw= request.form['pwd']
          hashpw=bcrypt.generate_password_hash(input_pw);
+
+         user_img= request.form['user_img']
+         introduce = request.form['introduce']
     
          user = {
+             "_id" : uuid.uuid4().hex,
              "user_id":input_id,
-             "input_pw":hashpw
+             "pwd":hashpw,
+             'user_img':user_img,
+             'introduce':introduce,
          }
+         
          db.users.insert_one(user);
          return jsonify({'result':'success'})
          
