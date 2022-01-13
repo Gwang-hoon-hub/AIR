@@ -9,7 +9,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -385,7 +384,7 @@
                                 <h5 class="mt-0" style="padding-top: 10px">${article['album_title']}</h5>
                                 <h6 class="mt-0">${article['album_singer']}</h6>
 
-                                <p><a href="#" onclick="like('${article['article_id']}')" style="cursor: pointer"
+                                <p><a href="#" onclick="like('${article['_id']}')" style="cursor: pointer"
                                         class="card-footer-item has-text-info like-btn">
                                         <i class="fas fa-heart"></i>
                                         <span class="like-counts"> ${article['like']}</span>
