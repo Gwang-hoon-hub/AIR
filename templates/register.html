@@ -69,26 +69,93 @@
 
 
     <script>
+        let regExp = /^[a-z0-9]{5,12}$/g;
         //input이 정규식의 규칙에 들어갈경우 true를 반환 
         //정규식 규칙:영문자로 시작하는 영문자 또는 숫자 6~20자 
-        function check_id(asValue) {
-            let regExp = /^[a-z]+[a-z0-9]{5,19}$/g;
-            if(regExp.test(asValue)){
-                //ajax call  정규식과 일치 
-                
+        function check_id() {
+            input_id = $('.ID').val()
+            let regExp = /^[a-z0-9]{5,12}$/g;
+            if (regExp.test(input_id)) {
+                //ajax call  정규식과 일치할때 call
+                $.ajax({
+                    type: "POST",
+                    url: "/api/check_id",
+                    data: { input_id: input_id },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert("사용가능 아이디입니다");
+                            return true;
+                        }
+                        else {
+                            alert('사용중인 아이디 입니다')
+                            return false;
+                        }
+                    }
+
+                })
             }
             else {
-                alert("사용할 수 없는 아이디입니다")
-
+                alert("아이디를 영문자로 시작하는 영문자 또는 숫자 5~13자를 입력해 주세요")
+                return false;
             }
-            return regExp.test(asValue);
         }
 
-        
-        function check_pw(input_pw) {
-            let regExp = /^[a-z]+[a-z0-9]{5,19}$/g;
-            return regExp.test(asValue);
+
+
+        function check_pw() {
+            pw1 = $('#password_1').val()
+            console.log(regExp.test(pw1))
+
+            if (regExp.test(pw1)) {
+                return true;
+            }
+            alert("비밀번호를 영문자로 시작하는 영문자 또는 숫자 5~13자를 입력해 주세요")
+
+            return false;
         }
+        
+
+        function submit() {
+            let id = $('.ID').val();
+            let pw1 = $('#password_1').val()
+            let pw2 = $('#password_2').val()
+          
+
+            
+            if (regExp.test(id)) {
+                if (pw1 == pw2) {
+                    if (check_pw(pw1)) {
+                       
+                        $.ajax({
+                            type: "POST",
+                            url: "/register",
+                            data: { user_id: id, pwd: pw1, },
+                            success: function (response) {
+                                if (response['result'] == 'success') {
+                                    alert("회원가입 성공");
+                                    window.location.replace("/login");
+                                    return ;
+                                }
+                                else {
+                                    alert(response['msg']);
+                                    window.location.reload();
+                                    return;
+
+
+                                }
+                            }
+
+                        })
+                    }
+                }
+                else 
+                 alert("비밀번호가 일치하지 않습니다")
+            }
+            else{
+            alert("아이디를 영문자로 시작하는 영문자 또는 숫자 5~13자를 입력해 주세요")
+            }
+        }
+
 
     </script>
 
@@ -116,9 +183,11 @@
 
 
         <div class="content_content">
-            <input type="password" id="password_1" class="pw" placeholder="ID">
+            <input type="text" id="ID" class="ID" placeholder="ID">
 
         </div>
+        
+
 
         <div class="content_content">
             <input type="password" id="password_1" class="pw" placeholder="PW">
@@ -138,8 +207,8 @@
         <script>
             //위치 이동시 작동하지 않음  생각 필요 
             $('.pw').focusout(function () {
-                var pwd1 = $("#password_1").val();
-                var pwd2 = $("#password_2").val();
+                let pwd1 = $("#password_1").val();
+                let pwd2 = $("#password_2").val();
 
                 if (pwd1 != '' && pwd2 == '') {
                     null;
@@ -147,18 +216,20 @@
                     if (pwd1 == pwd2) {
                         $("#alert-success").css('display', 'inline-block');
                         $("#alert-danger").css('display', 'none');
+
                     } else {
-                        alert("비밀번호가 일치하지 않습니다. 비밀번호를 재확인해주세요.");
+
                         $("#alert-success").css('display', 'none');
                         $("#alert-danger").css('display', 'inline-block');
+
                     }
                 }
             });
         </script>
 
         <div class="btn-group" role="group" aria-label="...">
-            <button type="button" class="btn btn-default ">제출하기</button>
-            <button type="button" class="btn btn-default register">ID체크</button>
+            <button type="button" class="btn btn-default" onclick="submit()">제출하기</button>
+            <button type="button" class="btn btn-default registe" onclick="check_id()">ID체크</button>
         </div>
 
 

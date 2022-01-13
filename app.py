@@ -206,10 +206,41 @@ def check_token(access_token):
 
 
 #########회원가입 추가 #########################################################
-@app.route('/register',methods=['GET','POST'])
+@app.route('/register',methods=['GET' ,'POST'] )
 def register():
     if(request.method == 'GET'):
         return render_template("register.html")
+
+
+    elif (request.method == 'POST'):
+         #postman 같은걸로 보내면 회원가입이 가능함 > 서버에서도 정규식 검사가 필요한듯 ? 일단 생략 
+         input_id= request.form['user_id']
+         result =list(db.users.find({'user_id' : input_id}))
+
+         if (len(result)!=0):
+            return jsonify({'result':'fail' ,'msg':'중복된 아이디입니다'})
+
+
+         input_pw= request.form['pwd']
+         hashpw=bcrypt.generate_password_hash(input_pw);
+    
+         user = {
+             "user_id":input_id,
+             "input_pw":hashpw
+         }
+         db.users.insert_one(user);
+         return jsonify({'result':'success'})
+         
+
+@app.route('/api/check_id',methods=['POST'])
+def check_id():
+    input_id=request.values.get("input_id")
+    user = list(db.users.find({'user_id' : input_id}))
+    print(user);
+    if(user == [] ):
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'resuly': 'fail'}) 
 
 
 ##############데이터 처리 ####################################################
